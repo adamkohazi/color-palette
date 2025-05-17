@@ -1,0 +1,224 @@
+#:kivy 2.3.0
+# main.kv
+
+<Box1@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_x: None
+    width: 600
+    size_hint_y: None
+    height: self.minimum_height  # Adjust height based on content
+    padding: 20, 10, 20, 10
+
+    canvas.before:
+        Color:
+            rgba: 0.42, 0.42, 0.42, 1
+        RoundedRectangle:
+            pos: self.pos[0]+5, self.pos[1]+5
+            size: self.size[0]-10, self.size[1]-10
+            radius: [10]
+        Color:
+            rgba: 0.13, 0.13, 0.13, 1
+        RoundedRectangle:
+            pos: self.pos[0]+6, self.pos[1]+6
+            size: self.size[0]-12, self.size[1]-12
+            radius: [10]
+        
+
+<Box2@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_x: 1
+    size_hint_y: None
+    height: self.minimum_height  # Adjust height based on content
+    padding: 20, 5, 20, 5
+
+    canvas.before:
+        Color:
+            rgba: 0.42, 0.42, 0.42, 1
+        RoundedRectangle:
+            pos: self.pos[0]+5, self.pos[1]+5
+            size: self.size[0]-10, self.size[1]-10
+            radius: [5]
+        Color:
+            rgba: 0.23, 0.23, 0.23, 1
+        RoundedRectangle:
+            pos: self.pos[0]+6, self.pos[1]+6
+            size: self.size[0]-12, self.size[1]-12
+            radius: [5]
+
+<Heading1@Label>:
+    size_hint_y: None
+    height: 30  # Fixed height
+    text_size: self.size
+    halign: 'left'
+    valign: 'bottom'
+    font_size: 20
+    color: 0.42, 0.42, 0.42, 1
+
+
+<Heading2@Heading1>:
+    height: 25  # Fixed height
+    font_size: 15
+
+<TableHeader@Label>:
+    size_hint_y: None
+    height: 25
+    bold: True
+    text_size: self.size
+    halign: 'center'
+
+<TableRow@Label>:
+    size_hint_y: None
+    height: 30
+
+BoxLayout:
+    orientation: 'vertical'
+
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Box1:
+        Heading1:
+            text: 'Generation'
+        
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 30  # Fixed row height
+            spacing: 10
+            
+            Label:
+                text: 'Generation method:'
+                size_hint_x: None
+                width: 200  # Fixed width
+                text_size: self.size
+                halign: 'right'
+                valign: 'middle'
+            
+            Spinner:
+                id: generator_type
+                size_hint_x: None
+                width: 200  # Fixed width
+                text: 'RGB random'
+                values: ['RGB random', 'RGB cosine', 'Monochrome']
+        
+        
+        Box2:
+            Heading2:
+                text: 'Method specific parameters'
+        
+        Button:
+            text: 'Generate new palette'
+            size_hint_y: None
+            height: 30  # Fixed height
+            on_press:
+                app.generate()
+                app.draw_table()
+    
+    Box1:
+        Heading1:
+            text: 'Color palette'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 30
+
+            TableHeader:
+                size_hint_x: None
+                width: 30
+                text: '#'
+            
+            TableHeader:
+                size_hint_x: None
+                width: 50
+                text: 'Preview'
+            
+            TableHeader:
+                size_hint_x: None
+                width: 100
+                text: 'RGB hex'
+            
+            TableHeader:
+                text: 'R'
+            
+            TableHeader:
+                text: 'G'
+            
+            TableHeader:
+                text: 'B'
+            
+            TableHeader:
+                text: 'X'
+            
+            TableHeader:
+                text: 'Y'
+            
+            TableHeader:
+                text: 'Z'
+        
+        BoxLayout:
+            id: palette_table
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height  # Adjust height based on content
+
+            
+        Button:
+            size_hint_y: None
+            height: 30  # Fixed height
+            text: '+'
+            on_press:
+                app.palette.append()
+                app.draw_table()
+    
+    Box1:
+        size_hint_y: 1 # Take up remaining space
+
+        Heading1:
+            text: 'Analysis'
+    
+        StackLayout:
+            id: visualization_area
+            size_hint_x: 1
+            size_hint_y: 1
+            Box2:
+                size_hint_x: None
+                width: self.minimum_width  # Adjust height based on content
+                size_hint_y: None
+                height: self.minimum_height  # Adjust height based on content
+                
+                Heading2:
+                    text: 'Graph 1'
+        
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 30  # Fixed row height
+                    spacing: 10
+                    
+                    Label:
+                        text: 'Type:'
+                        size_hint_x: None
+                        width: 100  # Fixed width
+                        text_size: self.size
+                        halign: 'right'
+                        valign: 'middle'
+                    
+                    Spinner:
+                        id: graph_type
+                        size_hint_x: 1
+                        text: 'RGB'
+                        values: ['RGB', 'HSB', 'XYZ']
+                
+                BoxLayout:
+                    id: graph_area
+                    orientation: "vertical"
+                    size_hint_x: None
+                    width: 280  # Fixed width
+                    size_hint_y: None
+                    height: 280  # Fixed height
+                    
