@@ -53,29 +53,43 @@ class MainApp(App):
     def update(self, dt):
         pass
 
-    def draw_graph(self):
+    def init_graph(self):
         
+        types = (
+            self.root.ids.graph1_type,
+            self.root.ids.graph2_type,
+            self.root.ids.graph3_type,
+            self.root.ids.graph4_type
+        )
 
-        # Remove earlier entries
-        self.root.ids.graph_area.clear_widgets()
+        areas = (
+            self.root.ids.graph1_area,
+            self.root.ids.graph2_area,
+            self.root.ids.graph3_area,
+            self.root.ids.graph4_area
+        )
 
-        # Prepare data
-        xs = [color.to_RGB().R for color in self.palette._colors]
-        ys = [color.to_RGB().G for color in self.palette._colors]
-        zs = [color.to_RGB().B for color in self.palette._colors]
+        for graph_type, graph_area in zip(types, areas):
+            # Remove earlier entries
+            graph_area.clear_widgets()
 
-        # Prepare chart
-        fig = plt.figure()
-        ax = fig.add_subplot(projection='3d')
-        
-        ax.scatter(xs, ys, zs, marker='x')
+            # Prepare data
+            xs = [color.to_RGB().R for color in self.palette._colors]
+            ys = [color.to_RGB().G for color in self.palette._colors]
+            zs = [color.to_RGB().B for color in self.palette._colors]
 
-        ax.set_xlabel('R')
-        ax.set_ylabel('G')
-        ax.set_zlabel('B')
+            # Prepare chart
+            fig = plt.figure()
+            ax = fig.add_subplot(projection='3d')
+            
+            ax.scatter(xs, ys, zs, marker='x')
 
-        # Draw content
-        self.root.ids.graph_area.add_widget(FigureCanvasKivyAgg(fig))
+            ax.set_xlabel('R')
+            ax.set_ylabel('G')
+            ax.set_zlabel('B')
+
+            # Draw content
+            graph_area.add_widget(FigureCanvasKivyAgg(fig))
 
     def draw_table(self, *args):
         # Remove earlier entries
@@ -160,7 +174,7 @@ class MainApp(App):
         else:
             pass
 
-        self.draw_graph()
+        self.init_graph()
 
 if __name__ == "__main__":
     MainApp().run()
