@@ -181,16 +181,13 @@ BoxLayout:
         Heading1:
             text: 'Analysis'
     
-        StackLayout:
-            id: visualization_area
-            size_hint_x: 1
-            size_hint_y: 1
+        GridLayout:
+            cols: 2
+            size_hint_x: 1 # Take up remaining space
+            size_hint_y: 1 # Take up remaining space
             Box2:
-                size_hint_x: None
-                width: self.minimum_width  # Adjust height based on content
-                size_hint_y: None
-                height: self.minimum_height  # Adjust height based on content
-                
+                size_hint_x: 1 # Take up remaining space
+                size_hint_y: 1 # Take up remaining space
                 Heading2:
                     text: 'Graph 1'
         
@@ -209,16 +206,102 @@ BoxLayout:
                         valign: 'middle'
                     
                     Spinner:
-                        id: graph_type
+                        id: graph1_type
                         size_hint_x: 1
                         text: 'RGB'
                         values: ['RGB', 'HSB', 'XYZ']
                 
                 BoxLayout:
-                    id: graph_area
+                    id: graph1_area
                     orientation: "vertical"
-                    size_hint_x: None
-                    width: 280  # Fixed width
+
+            Box2:
+                size_hint_x: 1 # Take up remaining space
+                size_hint_y: 1 # Take up remaining space
+                Heading2:
+                    text: 'Graph 1'
+        
+                BoxLayout:
+                    orientation: 'horizontal'
                     size_hint_y: None
-                    height: 280  # Fixed height
+                    height: 30  # Fixed row height
+                    spacing: 10
+                    
+                    Label:
+                        text: 'Type:'
+                        size_hint_x: None
+                        width: 100  # Fixed width
+                        text_size: self.size
+                        halign: 'right'
+                        valign: 'middle'
+                    
+                    Spinner:
+                        id: graph2_type
+                        size_hint_x: 1
+                        text: 'RGB'
+                        values: ['RGB', 'HSB', 'XYZ']
+                
+                BoxLayout:
+                    id: graph2_area
+                    orientation: "vertical"
+            
+            Box2:
+                size_hint_x: 1 # Take up remaining space
+                size_hint_y: 1 # Take up remaining space
+                Heading2:
+                    text: 'Graph 1'
+        
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 30  # Fixed row height
+                    spacing: 10
+                    
+                    Label:
+                        text: 'Type:'
+                        size_hint_x: None
+                        width: 100  # Fixed width
+                        text_size: self.size
+                        halign: 'right'
+                        valign: 'middle'
+                    
+                    Spinner:
+                        id: graph3_type
+                        size_hint_x: 1
+                        text: 'RGB'
+                        values: ['RGB', 'HSB', 'XYZ']
+                
+                BoxLayout:
+                    id: graph3_area
+                    orientation: "vertical"
+            
+            Box2:
+                size_hint_x: 1 # Take up remaining space
+                size_hint_y: 1 # Take up remaining space
+                Heading2:
+                    text: 'Graph 1'
+        
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 30  # Fixed row height
+                    spacing: 10
+                    
+                    Label:
+                        text: 'Type:'
+                        size_hint_x: None
+                        width: 100  # Fixed width
+                        text_size: self.size
+                        halign: 'right'
+                        valign: 'middle'
+                    
+                    Spinner:
+                        id: graph4_type
+                        size_hint_x: 1
+                        text: 'RGB'
+                        values: ['RGB', 'HSB', 'XYZ']
+                
+                BoxLayout:
+                    id: graph4_area
+                    orientation: "vertical"
                     
