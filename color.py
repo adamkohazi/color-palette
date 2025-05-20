@@ -1,6 +1,6 @@
 #color.py
 import numpy as np
-from collections import namedtuple
+from recordclass import recordclass
 
 # Conversion matrices
 CM_RGBtoXYZ = np.array([[0.49, 0.31, 0.2], [0.17697, 0.8124, 0.01063], [0, 0.01, 0.99]])
@@ -8,7 +8,7 @@ CM_XYZtoRGB = np.linalg.inv(CM_RGBtoXYZ)
 
 class Color(object):
     def __init__(self, xyz=[0,0,0]):
-        self._xyz = namedtuple('XYZ', ['X', 'Y', 'Z'])(*xyz)
+        self._xyz = recordclass('XYZ', ['X', 'Y', 'Z'])(*xyz)
 
     @classmethod
     def copy(cls, color):
@@ -33,13 +33,13 @@ class Color(object):
         return self._xyz
     
     def to_RGB(self):
-        return namedtuple('RGB', ['R', 'G', 'B'])(*CM_XYZtoRGB.dot(self._xyz))
+        return recordclass('RGB', ['R', 'G', 'B'])(*CM_XYZtoRGB.dot(self._xyz))
     
     def to_RGBA(self):
-        return namedtuple('RGB', ['R', 'G', 'B', 'A'])(*CM_XYZtoRGB.dot(self._xyz), 1)
+        return recordclass('RGB', ['R', 'G', 'B', 'A'])(*CM_XYZtoRGB.dot(self._xyz), 1)
     
     def to_RGB255(self):
-        return namedtuple('RGB255', ['R', 'G', 'B'])(*(int(element*255) for element in self.to_RGB()))
+        return recordclass('RGB255', ['R', 'G', 'B'])(*(int(element*255) for element in self.to_RGB()))
     
     def to_HSB(self):
         # Find the minimum, maximum of the R, G, and B components
@@ -54,7 +54,7 @@ class Color(object):
 
         # If there's no difference between the max and min values (i.e., the color is grayscale)
         if delta <= 0:
-            return namedtuple('HSB', ['H', 'S', 'B'])(0, saturation, brightness)
+            return recordclass('HSB', ['H', 'S', 'B'])(0, saturation, brightness)
 
         # If the red component is dominant
         if rgb.R == maxm:
@@ -72,4 +72,4 @@ class Color(object):
         hue = (hue/6) % 1.0
 
         # Return the final HSB color
-        return namedtuple('HSB', ['H', 'S', 'B'])(hue, saturation, brightness)
+        return recordclass('HSB', ['H', 'S', 'B'])(hue, saturation, brightness)

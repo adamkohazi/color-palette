@@ -24,6 +24,12 @@ class MainApp(App):
     def build(self):
         # Initialize palette
         self.palette = palette.Palette()
+        # Color palette of the GUI
+        self.palette.append(color.Color.from_RGB_hex("#000000"))
+        self.palette.append(color.Color.from_RGB_hex("#222222"))
+        self.palette.append(color.Color.from_RGB_hex("#3B3B3B"))
+        self.palette.append(color.Color.from_RGB_hex("#6B6B6B"))
+        self.palette.append(color.Color.from_RGB_hex("#E2E2E2"))
 
         # Set window size
         Window.size = (600, 800)
@@ -36,13 +42,6 @@ class MainApp(App):
         return self.root
 
     def initialize(self, dt):
-        # Set starting palette
-        self.palette.append(color.Color.from_RGB_hex("#000000"))
-        self.palette.append(color.Color.from_RGB_hex("#222222"))
-        self.palette.append(color.Color.from_RGB_hex("#3B3B3B"))
-        self.palette.append(color.Color.from_RGB_hex("#6B6B6B"))
-        self.palette.append(color.Color.from_RGB_hex("#E2E2E2"))
-
         # Redraw table
         self.draw_table()
 
@@ -51,10 +50,11 @@ class MainApp(App):
         pass
 
     def update(self, dt):
+        self.palette._colors[0]._xyz.X += 0.001
+        self.update_table()
         pass
 
-    def init_graph(self):
-        
+    def draw_graph(self):
         types = (
             self.root.ids.graph1_type,
             self.root.ids.graph2_type,
@@ -82,7 +82,7 @@ class MainApp(App):
             fig = plt.figure()
             ax = fig.add_subplot(projection='3d')
             
-            ax.scatter(xs, ys, zs, marker='x')
+            ax.scatter(xs, ys, zs, marker='o')
 
             ax.set_xlabel('R')
             ax.set_ylabel('G')
@@ -90,6 +90,10 @@ class MainApp(App):
 
             # Draw content
             graph_area.add_widget(FigureCanvasKivyAgg(fig))
+
+    def update_table(self):
+        for index, row in enumerate(self.root.ids.palette_table.children):
+            row.row_color.rgba = self.palette._colors[index].to_RGBA()
 
     def draw_table(self, *args):
         # Remove earlier entries
@@ -111,13 +115,13 @@ class MainApp(App):
 
             # Visualize color using row background
             with row.canvas.before:
-                Color(*color.to_RGBA())
-                rect = Rectangle(pos=row.pos, size=row.size)
+                row_color = Color(*color.to_RGBA())
+                row_background = Rectangle(pos=row.pos, size=row.size)
 
             # Tie the row and rectangle together
             row.bind(
-                pos=lambda instance, value, widget=row, shape=rect: setattr(shape, 'pos', widget.pos),
-                size=lambda instance, value, widget=row, shape=rect: setattr(shape, 'size', widget.size)
+                pos=lambda instance, value, widget=row, shape=row_background: setattr(shape, 'pos', widget.pos),
+                size=lambda instance, value, widget=row, shape=row_background: setattr(shape, 'size', widget.size)
             )
             self.root.ids.palette_table.add_widget(row)
 
