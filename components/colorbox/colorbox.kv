@@ -1,0 +1,48 @@
+#:kivy 2.3.0
+# colorbox.kv
+
+<ColorBox>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: 30
+
+    # Colored background
+    canvas.before:
+        Color:
+            rgba: root.background_color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    # Delete entry
+    Button:
+        size_hint_x: None
+        width: 30
+        text: '-'
+        #on_press: root.whatever
+    
+    # RGB values
+    Label:
+        size_hint_x: None
+        width: 100
+        text: root.rgb_hex
+    
+    # R, G, B values
+    Label:
+        text: root.color_model_1_component_1
+    
+    Label:
+        text: root.color_model_1_component_2
+    
+    Label:
+        text: root.color_model_1_component_3
+    
+    # X, Y, Z values
+    Label:
+        text: root.color_model_2_component_1
+    
+    Label:
+        text: root.color_model_2_component_2
+    
+    Label:
+        text: root.color_model_2_component_3
