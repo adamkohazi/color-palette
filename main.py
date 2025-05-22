@@ -11,13 +11,12 @@ from kivy.properties import *
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.uix.label import Label
-from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.boxlayout import BoxLayout
-from kivy.graphics.instructions import Canvas
 
-from kivy.uix.widget import Widget
 from kivy.uix.button import Button
-from kivy.graphics import RoundedRectangle, Rectangle, Color
+from kivy.graphics import Rectangle, Color
+
+from components.colorbox.colorbox import ColorBox
 
 
 class MainApp(App):
@@ -50,9 +49,16 @@ class MainApp(App):
         pass
 
     def update(self, dt):
-        self.palette._colors[0]._xyz.X += 0.001
-        self.update_table()
-        pass
+        # Alter color palette
+        self.palette._colors[0]._xyz.X += 0.005
+        self.palette._colors[0]._xyz.X %= 1.0
+
+        # Update table
+        for row in self.root.ids.palette_table.children:
+            row.update()
+        
+        # Update graphs
+
 
     def draw_graph(self):
         types = (
@@ -74,9 +80,9 @@ class MainApp(App):
             graph_area.clear_widgets()
 
             # Prepare data
-            xs = [color.to_RGB().R for color in self.palette._colors]
-            ys = [color.to_RGB().G for color in self.palette._colors]
-            zs = [color.to_RGB().B for color in self.palette._colors]
+            xs = [color.to_RGB().R for color in self.palette.colors]
+            ys = [color.to_RGB().G for color in self.palette.colors]
+            zs = [color.to_RGB().B for color in self.palette.colors]
 
             # Prepare chart
             fig = plt.figure()
@@ -86,14 +92,9 @@ class MainApp(App):
 
             ax.set_xlabel('R')
             ax.set_ylabel('G')
-            ax.set_zlabel('B')
 
             # Draw content
             graph_area.add_widget(FigureCanvasKivyAgg(fig))
-
-    def update_table(self):
-        for index, row in enumerate(self.root.ids.palette_table.children):
-            row.row_color.rgba = self.palette._colors[index].to_RGBA()
 
     def draw_table(self, *args):
         # Remove earlier entries
@@ -102,70 +103,10 @@ class MainApp(App):
         # Set the correct number of rows
         self.root.ids.palette_table.rows = len(self.palette._colors)
 
-        print("drawing table with ", len(self.palette._colors), " colors.")
-
         # Draw content
-        for index, color in enumerate(self.palette._colors):
+        for pallette_color in self.palette.colors:
             # Create new row
-            row = BoxLayout(
-                orientation = 'horizontal',
-                size_hint_y = None,
-                height = 30,
-            )
-
-            # Visualize color using row background
-            with row.canvas.before:
-                row_color = Color(*color.to_RGBA())
-                row_background = Rectangle(pos=row.pos, size=row.size)
-
-            # Tie the row and rectangle together
-            row.bind(
-                pos=lambda instance, value, widget=row, shape=row_background: setattr(shape, 'pos', widget.pos),
-                size=lambda instance, value, widget=row, shape=row_background: setattr(shape, 'size', widget.size)
-            )
-            self.root.ids.palette_table.add_widget(row)
-
-            # Remove color button
-            btn = Button(
-                size_hint_x = None,
-                width = 30,
-                text = '-',
-            )
-            # Actions
-            btn.bind(on_press=self.draw_table) # This is executed second
-            btn.bind(on_press=lambda instance, i=index: self.palette.pop(i)) # This is executed first
-
-            row.add_widget(btn)
-
-            # RGB values
-            row.add_widget(Label(
-                size_hint_x = None,
-                width = 100,
-                text = '#{:02X}{:02X}{:02X}'.format(*color.to_RGB255())
-            ))
-            # R, G, B values
-            color_components = color.to_RGB()
-            row.add_widget(Label(
-                text = "{:.2f}".format(color_components[0])
-            ))
-            row.add_widget(Label(
-                text = "{:.2f}".format(color_components[1])
-            ))
-            row.add_widget(Label(
-                text = "{:.2f}".format(color_components[2])
-            ))
-
-            # X, Y, Z values
-            color_components = color.to_XYZ()
-            row.add_widget(Label(
-                text = "{:.2f}".format(color_components[0])
-            ))
-            row.add_widget(Label(
-                text = "{:.2f}".format(color_components[1])
-            ))
-            row.add_widget(Label(
-                text = "{:.2f}".format(color_components[2])
-            ))
+            self.root.ids.palette_table.add_widget(ColorBox(color = pallette_color))
 
     def generate(self):
         generator_type = self.root.ids.generator_type.text
@@ -178,7 +119,7 @@ class MainApp(App):
         else:
             pass
 
-        self.init_graph()
+        self.draw_graph()
 
 if __name__ == "__main__":
     MainApp().run()

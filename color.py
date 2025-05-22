@@ -20,7 +20,7 @@ class Color(object):
 
     @classmethod
     def from_RGB255(cls, rgb):
-        return cls.from_RGB(tuple(element/255 for element in rgb))
+        return cls.from_RGB(tuple(component/255 for component in rgb))
 
     @classmethod
     def from_RGB_hex(cls, hex):
@@ -33,13 +33,13 @@ class Color(object):
         return self._xyz
     
     def to_RGB(self):
-        return recordclass('RGB', ['R', 'G', 'B'])(*CM_XYZtoRGB.dot(self._xyz))
+        return recordclass('RGB', ['R', 'G', 'B'])(*(min(max(0.0, component), 1.0) for component in CM_XYZtoRGB.dot(self._xyz))) # Clamp values
     
     def to_RGBA(self):
-        return recordclass('RGB', ['R', 'G', 'B', 'A'])(*CM_XYZtoRGB.dot(self._xyz), 1)
+        return recordclass('RGB', ['R', 'G', 'B', 'A'])(*self.to_RGB(), 1.0)
     
     def to_RGB255(self):
-        return recordclass('RGB255', ['R', 'G', 'B'])(*(int(element*255) for element in self.to_RGB()))
+        return recordclass('RGB255', ['R', 'G', 'B'])(*(int(component*255) for component in self.to_RGB()))
     
     def to_HSB(self):
         # Find the minimum, maximum of the R, G, and B components

@@ -5,6 +5,10 @@ import random
 class Palette(object):
     def __init__(self):
         self._colors = []
+
+    @property
+    def colors(self):
+        return list(self._colors)
     
     @property
     def palette_size(self) -> int:
