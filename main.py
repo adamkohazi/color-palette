@@ -56,6 +56,7 @@ class MainApp(App):
             row.update()
         
         # Update graphs
+        self.root.ids.diagram1.update()
 
     def draw_table(self, *args):
         # Remove earlier entries
