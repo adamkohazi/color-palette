@@ -5,6 +5,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+
 from kivy_garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
 class ColorDiagram(BoxLayout):
@@ -25,6 +27,7 @@ class ColorDiagram(BoxLayout):
             # Update point color
             rgb = color.to_RGB()
             point.set_color(rgb)
+            point.set_edgecolor('black')
 
             if self.diagram_type.text == 'RGB':
                 # Update 3D scatter plot
@@ -62,7 +65,7 @@ class ColorDiagram(BoxLayout):
             # Plot point by point, each with own color
             for color in self.palette._colors:
                 rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.R, rgb.G, rgb.B, s=50.0, marker='o', color=rgb)
+                point = self.axes.scatter(rgb.R, rgb.G, rgb.B, s=50.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -84,7 +87,7 @@ class ColorDiagram(BoxLayout):
             # Plot point by point, each with own color
             for color in self.palette._colors:
                 rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.R, rgb.G, s=50.0, marker='o', color=rgb)
+                point = self.axes.scatter(rgb.R, rgb.G, s=50.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -102,7 +105,7 @@ class ColorDiagram(BoxLayout):
             # Plot point by point, each with own color
             for color in self.palette._colors:
                 rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.G, rgb.B, s=50.0, marker='o', color=rgb)
+                point = self.axes.scatter(rgb.G, rgb.B, s=50.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -120,7 +123,7 @@ class ColorDiagram(BoxLayout):
             # Plot point by point, each with own color
             for color in self.palette._colors:
                 rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.R, rgb.B, s=50.0, marker='o', color=rgb)
+                point = self.axes.scatter(rgb.R, rgb.B, s=50.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
