@@ -72,28 +72,35 @@
     size_hint_y: None
     height: 30
 
+<PropertyTag@Label>:
+    size_hint_x: None
+    width: 200  # Fixed width
+    text_size: self.size
+    halign: 'right'
+    valign: 'middle'
 
-<Randomize@Button>:
-    text: 'Generate new palette'
-    size_hint_y: None
-    height: 30  # Fixed height
-
-<Cosine@BoxLayout>:
-    action: action
-    a_r: a_r
+<Randomize@BoxLayout>:
+    generate_palette: lambda: None # Function that does nothing, but we can set to another function, once class is used elsewhere
 
     orientation: 'horizontal'
     size_hint_y: None
     height: 30  # Fixed row height
     spacing: 10
     
-    Label:
+    Button:
+        text: 'Generate new palette'
+        on_press: root.generate_palette()
+
+<Cosine@BoxLayout>:
+    generate_palette: lambda *args: None # Function that does nothing, but we can set to another function, once class is used elsewhere
+
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: 30  # Fixed row height
+    spacing: 10
+    
+    PropertyTag:
         text: 'Red offset:'
-        size_hint_x: None
-        width: 200  # Fixed width
-        text_size: self.size
-        halign: 'right'
-        valign: 'middle'
     
     Slider:
         id: a_r
@@ -101,4 +108,37 @@
         max: 1
         step: 0.1
         orientation: 'horizontal'
-        on_value: action
+        on_value: root.generate_palette(self, a_r.value, b_r.value, c_r.value, d_r.value)
+    
+    PropertyTag:
+        text: 'Red amplitude:'
+    
+    Slider:
+        id: b_r
+        min: -1
+        max: 1
+        step: 0.1
+        orientation: 'horizontal'
+        on_value: root.generate_palette(self, a_r.value, b_r.value, c_r.value, d_r.value)
+    
+    PropertyTag:
+        text: 'Red frequency:'
+    
+    Slider:
+        id: c_r
+        min: -1
+        max: 1
+        step: 0.1
+        orientation: 'horizontal'
+        on_value: root.generate_palette(self, a_r.value, b_r.value, c_r.value, d_r.value)
+    
+    PropertyTag:
+        text: 'Red phase:'
+    
+    Slider:
+        id: d_r
+        min: -1
+        max: 1
+        step: 0.1
+        orientation: 'horizontal'
+        on_value: root.generate_palette(self, a_r.value, b_r.value, c_r.value, d_r.value)

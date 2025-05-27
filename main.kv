@@ -46,12 +46,11 @@ BoxLayout:
                 text: 'Method specific parameters'
         
             Randomize:
-                on_press:
-                    app.generate()
+                generate_palette: app.generate
             
             Cosine:
-                action:
-                    app.generate()
+                generate_palette: app.generate
+                
     Box1:
         Heading1:
             text: 'Color palette'
