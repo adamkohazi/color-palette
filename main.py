@@ -72,14 +72,22 @@ class MainApp(App):
 
     def generate(self):
         generator_type = self.root.ids.generator_type.text
+        print("generating")
         if generator_type == 'RGB random':
             self.palette.generate_RGB_random()
         elif generator_type == 'RGB cosine':
-            pass
+            a = [0.5, 0.5, 0.5]
+            b = [0.5, 0.5, 0.5]
+            c = [1.0, 1.0, 1.0]
+            d = [0.0, 0.33, 0.66]
+            self.palette.generate_RGB_cosine(a, b, c, d)
         elif generator_type == 'monochrome':
             pass
         else:
             pass
+            
+        # New colors are generated, so table needs to be refreshed
+        self.draw_table()
 
 if __name__ == "__main__":
     MainApp().run()
