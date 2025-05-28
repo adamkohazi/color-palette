@@ -6,10 +6,6 @@ import math
 class Palette(object):
     def __init__(self):
         self._colors = []
-
-    @property
-    def colors(self):
-        return list(self._colors)
     
     @property
     def palette_size(self) -> int:
@@ -31,14 +27,15 @@ class Palette(object):
             self._colors.pop(index)
         print("Color popped. Remaining: ", len(self._colors))
     
-    def generate_RGB_random(self):
-        self._colors = [color.Color.from_RGB((random.random(), random.random(), random.random())) for _ in self._colors]
+    def generate_RGB_random(self, *args):
+        for c in self._colors:
+            c.set_RGB((random.random(), random.random(), random.random()))
     
-    def generate_RGB_cosine(self, a, b, c, d):
+    def generate_RGB_cosine(self, a_r, b_r, c_r, d_r, a_g, b_g, c_g, d_g, a_b, b_b, c_b, d_b):
         dp = math.pi * 2.0 / len(self._colors)
         for index in range(len(self._colors)):
             phase = index * dp
-            red = a[0] + b[0] * math.cos(c[0] * phase + d[0])
-            green = a[1] + b[1] * math.cos(c[1] * phase + d[1])
-            blue = a[2] + b[2] * math.cos(c[2] * phase + d[2])
+            red = a_r + b_r * math.cos(c_r * phase + d_r)
+            green = a_g + b_g * math.cos(c_g * phase + d_g)
+            blue = a_b + b_b * math.cos(c_b * phase + d_b)
             self._colors[index] = color.Color.from_RGB((red, green, blue))

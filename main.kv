@@ -44,12 +44,14 @@ BoxLayout:
         Box2:
             Heading2:
                 text: 'Method specific parameters'
-        
+
             Randomize:
-                generate_palette: app.generate
+                id: randomize
+                # generate_palette is binded in main.py once app is fully built
             
             Cosine:
-                generate_palette: app.generate
+                id: cosine
+                # generate_palette is binded in main.py once app is fully built
                 
     Box1:
         Heading1:
