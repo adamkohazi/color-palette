@@ -13,7 +13,6 @@ class ColorDiagram(BoxLayout):
     palette = ObjectProperty(None)
 
     def on_palette(self, instance, value):
-        print('on_palette')
         if isinstance(value, palette.Palette):
             self.update()
         else:
@@ -23,7 +22,7 @@ class ColorDiagram(BoxLayout):
         if self.diagram_type.text == 'None':
             return
         
-        for point, color in zip(self.points, self.palette.colors):
+        for point, color in zip(self.points, self.palette._colors):
             # Update point color
             rgb = color.to_RGB()
             point.set_color(rgb)

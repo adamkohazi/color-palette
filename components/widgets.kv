@@ -79,6 +79,14 @@
     halign: 'right'
     valign: 'middle'
 
+<CosineSlider@Slider>:
+    min: 0
+    max: 1
+    step: 0.033
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: 30
+
 <Randomize@BoxLayout>:
     generate_palette: lambda *args: None # Function that does nothing, but we can set to another function, once class is used elsewhere
 
@@ -91,145 +99,96 @@
         text: 'Generate new palette'
         on_press: root.generate_palette()
 
-<Cosine@BoxLayout>:
+<Cosine@GridLayout>:
     generate_palette: lambda *args: None # Function that does nothing, but we can set to another function, once class is used elsewhere
 
-    orientation: 'horizontal'
+    cols: 2
     size_hint_y: None
-    height: 30  # Fixed row height
-    spacing: 10
+    height: self.minimum_height
     
     PropertyTag:
         text: 'Red offset:'
     
-    Slider:
+    CosineSlider:
         id: a_r
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
     
     PropertyTag:
         text: 'Red amplitude:'
     
-    Slider:
+    CosineSlider:
         id: b_r
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
     
     PropertyTag:
         text: 'Red frequency:'
     
-    Slider:
+    CosineSlider:
         id: c_r
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
+        max: 2
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
     
     PropertyTag:
         text: 'Red phase:'
     
-    Slider:
+    CosineSlider:
         id: d_r
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
-    
-
-
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
 
     PropertyTag:
-    text: 'Green offset:'
+        text: 'Green offset:'
     
-    Slider:
+    CosineSlider:
         id: a_g
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
     
     PropertyTag:
         text: 'Green amplitude:'
     
-    Slider:
+    CosineSlider:
         id: b_g
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
     
     PropertyTag:
         text: 'Green frequency:'
     
-    Slider:
+    CosineSlider:
         id: c_g
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
+        max: 2
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
     
     PropertyTag:
         text: 'Green phase:'
     
-    Slider:
+    CosineSlider:
         id: d_g
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
     
-        PropertyTag:
-        text: 'Red offset:'
+    PropertyTag:
+        text: 'Blue offset:'
     
-    Slider:
-        id: a_r
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
+    CosineSlider:
+        id: a_b
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
     
     PropertyTag:
         text: 'Blue amplitude:'
     
-    Slider:
-        id: b_r
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
+    CosineSlider:
+        id: b_b
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
     
     PropertyTag:
         text: 'Blue frequency:'
     
-    Slider:
-        id: c_r
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
-    
+    CosineSlider:
+        id: c_b
+        max: 2
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+
     PropertyTag:
         text: 'Blue phase:'
     
-    Slider:
-        id: d_r
-        min: -1
-        max: 1
-        step: 0.1
-        orientation: 'horizontal'
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value)
+    CosineSlider:
+        id: d_b
+        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
