@@ -53,10 +53,6 @@ class MainApp(App):
         pass
 
     def update(self, dt):
-        # Alter color palette
-        self.palette._colors[0]._xyz.X += 0.005
-        self.palette._colors[0]._xyz.X %= 1.0
-
         # Update table
         for row in self.root.ids.palette_table.children:
             row.update()
@@ -75,22 +71,6 @@ class MainApp(App):
         for pallette_color in self.palette._colors:
             # Create new row
             self.root.ids.palette_table.add_widget(ColorBox(color = pallette_color))
-
-    def generate(self, *args):
-        generator_type = self.root.ids.generator_type.text
-        print("generating")
-        if generator_type == 'RGB random':
-            self.palette.generate_RGB_random()
-        elif generator_type == 'RGB cosine':
-            a = [0.5, 0.5, 0.5]
-            b = [0.5, 0.5, 0.5]
-            c = [1.0, 1.0, 1.0]
-            d = [0.0, 0.33, 0.66]
-            self.palette.generate_RGB_cosine(a, b, c, d)
-        elif generator_type == 'monochrome':
-            pass
-        else:
-            pass
 
 if __name__ == "__main__":
     MainApp().run()
