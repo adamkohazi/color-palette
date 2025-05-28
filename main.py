@@ -10,12 +10,14 @@ from kivy.lang.builder import Builder
 from kivy.properties import *
 from kivy.clock import Clock
 from kivy.core.window import Window
+from kivy.properties import ObjectProperty
 
 from components.colorbox.colorbox import ColorBox
 from components.colordiagram.colordiagram import ColorDiagram
 
 
 class MainApp(App):
+
     def build(self):
         # Initialize palette
         self.palette = palette.Palette()
@@ -37,6 +39,10 @@ class MainApp(App):
         return self.root
 
     def initialize(self, dt):
+        # Bind the buttons only once everything is built
+        self.root.ids.randomize.generate_palette = self.palette.generate_RGB_random
+        self.root.ids.cosine.generate_palette = self.palette.generate_RGB_cosine
+
         # Redraw table
         self.draw_table()
 
@@ -66,11 +72,11 @@ class MainApp(App):
         self.root.ids.palette_table.rows = len(self.palette._colors)
 
         # Draw content
-        for pallette_color in self.palette.colors:
+        for pallette_color in self.palette._colors:
             # Create new row
             self.root.ids.palette_table.add_widget(ColorBox(color = pallette_color))
 
-    def generate(self):
+    def generate(self, *args):
         generator_type = self.root.ids.generator_type.text
         print("generating")
         if generator_type == 'RGB random':
@@ -85,9 +91,6 @@ class MainApp(App):
             pass
         else:
             pass
-            
-        # New colors are generated, so table needs to be refreshed
-        self.draw_table()
 
 if __name__ == "__main__":
     MainApp().run()

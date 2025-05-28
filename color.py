@@ -29,6 +29,21 @@ class Color(object):
         rgb = tuple(int(hex[i:i+2], 16) / 255.0 for i in (0, 2, 4))
         return cls.from_RGB(rgb)
 
+    def set_XYZ(self, xyz):
+        self._xyz = recordclass('XYZ', ['X', 'Y', 'Z'])(*xyz)
+    
+    def set_RGB(self, rgb):
+        self._xyz = recordclass('XYZ', ['X', 'Y', 'Z'])(*CM_RGBtoXYZ.dot(rgb))
+
+    def set_RGB255(self, rgb):
+       self.set_RGB(tuple(component/255 for component in rgb))
+
+    def set_RGB_hex(self, hex):
+        # Only work on last 6 characters
+        hex = hex[-6:]
+        rgb = tuple(int(hex[i:i+2], 16) / 255.0 for i in (0, 2, 4))
+        self.set_RGB(rgb)
+
     def to_XYZ(self):
         return self._xyz
     
