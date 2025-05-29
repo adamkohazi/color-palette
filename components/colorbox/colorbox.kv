@@ -2,6 +2,8 @@
 # colorbox.kv
 
 <ColorBox>:
+    remove: lambda *args: None # Function that does nothing, but we can set to another function, once class is used elsewhere
+    
     orientation: 'horizontal'
     size_hint_y: None
     height: 30
@@ -16,10 +18,11 @@
 
     # Delete entry
     Button:
+        id: delete_button
         size_hint_x: None
         width: 30
         text: '-'
-        #on_press: root.whatever
+        on_press: root.remove(root)
     
     # RGB values
     Label:

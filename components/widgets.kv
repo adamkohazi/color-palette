@@ -1,6 +1,8 @@
 #:kivy 2.3.0
 # widgets.kv
 
+#:include components/paramcontrol/paramcontrol.kv
+
 <Box1@BoxLayout>:
     orientation: 'vertical'
     size_hint_x: None
@@ -72,20 +74,16 @@
     size_hint_y: None
     height: 30
 
-<PropertyTag@Label>:
-    size_hint_x: None
-    width: 200  # Fixed width
-    text_size: self.size
-    halign: 'right'
-    valign: 'middle'
+<FloatInput@TextInput>:
+    input_filter: lambda text, from_undo: text if text in '0123456789.' else ''
+    multiline: False
+    on_text:
+        if not self.text: pass
+        elif not self.text.replace('.', '', 1).isdigit(): self.text = ''
+        elif self.text.count('.') > 1: self.text = self.text[:-1]
+        elif float(self.text) > 1: self.text = self.text[:-1]
+        elif '.' in self.text and len(self.text.split('.')[-1]) > 2: self.text = self.text[:-1]
 
-<CosineSlider@Slider>:
-    min: 0
-    max: 1
-    step: 0.033
-    orientation: 'horizontal'
-    size_hint_y: None
-    height: 30
 
 <Randomize@BoxLayout>:
     generate_palette: lambda *args: None # Function that does nothing, but we can set to another function, once class is used elsewhere
@@ -99,96 +97,87 @@
         text: 'Generate new palette'
         on_press: root.generate_palette()
 
-<Cosine@GridLayout>:
+<Cosine@BoxLayout>:
     generate_palette: lambda *args: None # Function that does nothing, but we can set to another function, once class is used elsewhere
 
-    cols: 2
+    orientation: 'vertical'
     size_hint_y: None
     height: self.minimum_height
     
-    PropertyTag:
-        text: 'Red offset:'
-    
-    CosineSlider:
+    ParamControl:
         id: a_r
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
-    
-    PropertyTag:
-        text: 'Red amplitude:'
-    
-    CosineSlider:
+        name: 'Red offset'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
         id: b_r
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
-    
-    PropertyTag:
-        text: 'Red frequency:'
-    
-    CosineSlider:
+        name: 'Red amplitude'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
         id: c_r
-        max: 2
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        name: 'Red frequency'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        max: 2.0
+        step: 0.1
+        value: 1.0
     
-    PropertyTag:
-        text: 'Red phase:'
-    
-    CosineSlider:
+    ParamControl:
         id: d_r
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        name: 'Red phase'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.0
 
-    PropertyTag:
-        text: 'Green offset:'
-    
-    CosineSlider:
+    ParamControl:
         id: a_g
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
-    
-    PropertyTag:
-        text: 'Green amplitude:'
-    
-    CosineSlider:
-        id: b_g
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
-    
-    PropertyTag:
-        text: 'Green frequency:'
-    
-    CosineSlider:
-        id: c_g
-        max: 2
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
-    
-    PropertyTag:
-        text: 'Green phase:'
-    
-    CosineSlider:
-        id: d_g
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
-    
-    PropertyTag:
-        text: 'Blue offset:'
-    
-    CosineSlider:
-        id: a_b
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
-    
-    PropertyTag:
-        text: 'Blue amplitude:'
-    
-    CosineSlider:
-        id: b_b
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
-    
-    PropertyTag:
-        text: 'Blue frequency:'
-    
-    CosineSlider:
-        id: c_b
-        max: 2
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        name: 'Green offset'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
 
-    PropertyTag:
-        text: 'Blue phase:'
+    ParamControl:
+        id: b_g
+        name: 'Green amplitude'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
+        id: c_g
+        name: 'Green frequency'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        max: 2.0
+        step: 0.1
+        value: 1.0
     
-    CosineSlider:
+    ParamControl:
+        id: d_g
+        name: 'Green phase'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.33
+
+    ParamControl:
+        id: a_b
+        name: 'Blue offset'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
+        id: b_b
+        name: 'Blue amplitude'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
+        id: c_b
+        name: 'Blue frequency'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        max: 2.0
+        step: 0.1
+        value: 1.0
+    
+    ParamControl:
         id: d_b
-        on_value: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        name: 'Blue phase'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.67

@@ -5,8 +5,8 @@
 #:include components/colorbox/colorbox.kv
 #:include components/colordiagram/colordiagram.kv
 
-BoxLayout:
-    orientation: 'vertical'
+StackLayout:
+    orientation: 'tb-lr'
 
     canvas.before:
         Color:
@@ -14,44 +14,6 @@ BoxLayout:
         Rectangle:
             pos: self.pos
             size: self.size
-
-    Box1:
-        Heading1:
-            text: 'Generation'
-        
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: 30  # Fixed row height
-            spacing: 10
-            
-            Label:
-                text: 'Generation method:'
-                size_hint_x: None
-                width: 200  # Fixed width
-                text_size: self.size
-                halign: 'right'
-                valign: 'middle'
-            
-            Spinner:
-                id: generator_type
-                size_hint_x: None
-                width: 200  # Fixed width
-                text: 'RGB random'
-                values: ['RGB random', 'RGB cosine', 'Monochrome']
-        
-        
-        Box2:
-            Heading2:
-                text: 'Method specific parameters'
-
-            Randomize:
-                id: randomize
-                # generate_palette is binded in main.py once app is fully built
-            
-            Cosine:
-                id: cosine
-                # generate_palette is binded in main.py once app is fully built
                 
     Box1:
         Heading1:
@@ -103,20 +65,60 @@ BoxLayout:
             text: '+'
             on_press:
                 app.palette.append()
-                app.draw_table()
-    
-    Box1:
-        size_hint_y: 1 # Take up remaining space
 
+    Box1:
         Heading1:
             text: 'Analysis'
     
         GridLayout:
             cols: 2
             size_hint_x: 1 # Take up remaining space
-            size_hint_y: 1 # Take up remaining space
+            size_hint_y: None
+            height: 300
             Box2:
                 size_hint_y: 1 # Take up remaining space
                 ColorDiagram:
                     id: diagram1
+            Box2:
+                size_hint_y: 1 # Take up remaining space
+                ColorDiagram:
+                    id: diagram2
+    
+    Box1:
+        Heading1:
+            text: 'Generation'
+        
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 30  # Fixed row height
+            spacing: 10
+            
+            Label:
+                text: 'Generation method:'
+                size_hint_x: None
+                width: 200  # Fixed width
+                text_size: self.size
+                halign: 'right'
+                valign: 'middle'
+            
+            Spinner:
+                id: generator_type
+                size_hint_x: None
+                width: 200  # Fixed width
+                text: 'RGB random'
+                values: ['RGB random', 'RGB cosine', 'Monochrome']
+        
+        
+        Box2:
+            Heading2:
+                text: 'Method specific parameters'
+
+            Randomize:
+                id: randomize
+                # generate_palette is binded in main.py once app is fully built
+            
+            Cosine:
+                id: cosine
+                # generate_palette is binded in main.py once app is fully built
                     
