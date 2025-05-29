@@ -14,6 +14,7 @@ from kivy.properties import ObjectProperty
 
 from components.colorbox.colorbox import ColorBox
 from components.colordiagram.colordiagram import ColorDiagram
+from components.paramcontrol.paramcontrol import ParamControl
 
 
 class MainApp(App):
@@ -29,7 +30,7 @@ class MainApp(App):
         self.palette.append(color.Color.from_RGB_hex("#E2E2E2"))
 
         # Set window size
-        Window.size = (600, 800)
+        Window.size = (960, 600)
 
         # Draw UI
         self.root = Builder.load_file("main.kv")
@@ -43,34 +44,37 @@ class MainApp(App):
         self.root.ids.randomize.generate_palette = self.palette.generate_RGB_random
         self.root.ids.cosine.generate_palette = self.palette.generate_RGB_cosine
 
-        # Redraw table
-        self.draw_table()
-
         self.root.ids.diagram1.palette = self.palette
+        self.root.ids.diagram2.palette = self.palette
 
         # Keep updating display
         Clock.schedule_interval(self.update, 1.0/10.0)
         pass
 
     def update(self, dt):
+        # Set the correct number of rows
+        while(len(self.root.ids.palette_table.children) < len(self.palette._colors)):
+            # Create new row
+            index = len(self.root.ids.palette_table.children)
+            new_row = ColorBox(color = self.palette._colors[index])
+            self.root.ids.palette_table.add_widget(new_row)
+            # Bind the remove button to remove that color from the palette
+            def remove_color(instance):
+                index = len(self.root.ids.palette_table.children)-self.root.ids.palette_table.children.index(instance)-1
+                print("deleting index: ", index)
+                self.palette.pop(index)
+                self.root.ids.palette_table.remove_widget(instance)
+
+            new_row.remove = remove_color
+
         # Update table
-        for row in self.root.ids.palette_table.children:
+        for row, color in zip(self.root.ids.palette_table.children, reversed(self.palette._colors)):
+            row.color = color
             row.update()
         
         # Update graphs
         self.root.ids.diagram1.update()
-
-    def draw_table(self, *args):
-        # Remove earlier entries
-        self.root.ids.palette_table.clear_widgets()
-
-        # Set the correct number of rows
-        self.root.ids.palette_table.rows = len(self.palette._colors)
-
-        # Draw content
-        for pallette_color in self.palette._colors:
-            # Create new row
-            self.root.ids.palette_table.add_widget(ColorBox(color = pallette_color))
+        self.root.ids.diagram2.update()
 
 if __name__ == "__main__":
     MainApp().run()
