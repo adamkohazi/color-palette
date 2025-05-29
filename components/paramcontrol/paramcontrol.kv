@@ -1,0 +1,36 @@
+#:kivy 2.3.0
+# paramcontrol.kv
+
+<ParamControl>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: 30
+    
+    # Parameter name
+    Label:
+        size_hint_x: None
+        width: 150  # Fixed width
+        text_size: self.size
+        halign: 'right'
+        valign: 'middle'
+        text: root.name
+    
+    # Slider
+    Slider:
+        id: slider
+        min: root.min
+        max: root.max
+        step: root.step
+        value: root.value
+        on_value: root.on_slider_value(self, self.value)
+    
+    # Input field
+    TextInput:
+        id: text_input
+        size_hint_x: None
+        width: 100  # Fixed width
+        multiline: False
+        # Only allow numbers and maximum a single dot. (Maximum 4 characters)
+        input_filter: lambda text, from_undo:text if text in '0123456789.' and len(self.text)<max(len(str(root.step)), len(str(root.max))) and not(text == '.' and '.' in self.text) else ''
+        on_text: root.on_text_input(self, self.text)
+

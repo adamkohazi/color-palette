@@ -1,0 +1,35 @@
+#:kivy 2.3.0
+# colordiagram.kv
+
+<ColorDiagram>:
+    diagram_type: diagram_type
+    diagram_area: diagram_area
+
+    orientation: 'vertical'
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 30  # Fixed row height
+        spacing: 10
+        
+        Label:
+            text: 'Type:'
+            size_hint_x: None
+            width: 100  # Fixed width
+            text_size: self.size
+            halign: 'right'
+            valign: 'middle'
+        
+        Spinner:
+            id: diagram_type
+            size_hint_x: 1
+            text: 'None'
+            values: ['None', 'RGB', 'RG', 'GB', 'RB'] #, 'HSB', 'XYZ']
+            on_text: root.create()
+
+    BoxLayout:
+        id: diagram_area
+        orientation: 'horizontal'
+    
+        # Diagram will go here
