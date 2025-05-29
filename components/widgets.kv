@@ -1,0 +1,183 @@
+#:kivy 2.3.0
+# widgets.kv
+
+#:include components/paramcontrol/paramcontrol.kv
+
+<Box1@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_x: None
+    width: 600
+    size_hint_y: None
+    height: self.minimum_height  # Adjust height based on content
+    padding: 20, 10, 20, 10
+    spacing: 10
+
+    canvas.before:
+        Color:
+            rgba: 0.42, 0.42, 0.42, 1
+        RoundedRectangle:
+            pos: self.pos[0]+5, self.pos[1]+5
+            size: self.size[0]-10, self.size[1]-10
+            radius: [10]
+        Color:
+            rgba: 0.13, 0.13, 0.13, 1
+        RoundedRectangle:
+            pos: self.pos[0]+6, self.pos[1]+6
+            size: self.size[0]-12, self.size[1]-12
+            radius: [10]
+        
+
+<Box2@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_x: 1
+    size_hint_y: None
+    height: self.minimum_height  # Adjust height based on content
+    padding: 20, 10, 20, 10
+    spacing: 10
+
+    canvas.before:
+        Color:
+            rgba: 0.42, 0.42, 0.42, 1
+        RoundedRectangle:
+            pos: self.pos[0]+5, self.pos[1]+5
+            size: self.size[0]-10, self.size[1]-10
+            radius: [5]
+        Color:
+            rgba: 0.23, 0.23, 0.23, 1
+        RoundedRectangle:
+            pos: self.pos[0]+6, self.pos[1]+6
+            size: self.size[0]-12, self.size[1]-12
+            radius: [5]
+
+<Heading1@Label>:
+    size_hint_y: None
+    height: 30  # Fixed height
+    text_size: self.size
+    halign: 'left'
+    valign: 'bottom'
+    font_size: 20
+    color: 0.42, 0.42, 0.42, 1
+
+
+<Heading2@Heading1>:
+    height: 25  # Fixed height
+    font_size: 15
+
+<TableHeader@Label>:
+    size_hint_y: None
+    height: 25
+    bold: True
+    text_size: self.size
+    halign: 'center'
+
+<TableRow@Label>:
+    size_hint_y: None
+    height: 30
+
+<FloatInput@TextInput>:
+    input_filter: lambda text, from_undo: text if text in '0123456789.' else ''
+    multiline: False
+    on_text:
+        if not self.text: pass
+        elif not self.text.replace('.', '', 1).isdigit(): self.text = ''
+        elif self.text.count('.') > 1: self.text = self.text[:-1]
+        elif float(self.text) > 1: self.text = self.text[:-1]
+        elif '.' in self.text and len(self.text.split('.')[-1]) > 2: self.text = self.text[:-1]
+
+
+<Randomize@BoxLayout>:
+    generate_palette: lambda *args: None # Function that does nothing, but we can set to another function, once class is used elsewhere
+
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: 30  # Fixed row height
+    spacing: 10
+    
+    Button:
+        text: 'Generate new palette'
+        on_press: root.generate_palette()
+
+<Cosine@BoxLayout>:
+    generate_palette: lambda *args: None # Function that does nothing, but we can set to another function, once class is used elsewhere
+
+    orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height
+    
+    ParamControl:
+        id: a_r
+        name: 'Red offset'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
+        id: b_r
+        name: 'Red amplitude'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
+        id: c_r
+        name: 'Red frequency'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        max: 2.0
+        step: 0.1
+        value: 1.0
+    
+    ParamControl:
+        id: d_r
+        name: 'Red phase'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.0
+
+    ParamControl:
+        id: a_g
+        name: 'Green offset'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
+        id: b_g
+        name: 'Green amplitude'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
+        id: c_g
+        name: 'Green frequency'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        max: 2.0
+        step: 0.1
+        value: 1.0
+    
+    ParamControl:
+        id: d_g
+        name: 'Green phase'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.33
+
+    ParamControl:
+        id: a_b
+        name: 'Blue offset'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
+        id: b_b
+        name: 'Blue amplitude'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.5
+
+    ParamControl:
+        id: c_b
+        name: 'Blue frequency'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        max: 2.0
+        step: 0.1
+        value: 1.0
+    
+    ParamControl:
+        id: d_b
+        name: 'Blue phase'
+        callback: root.generate_palette(a_r.value, b_r.value, c_r.value, d_r.value, a_g.value, b_g.value, c_g.value, d_g.value, a_b.value, b_b.value, c_b.value, d_b.value)
+        value: 0.67
