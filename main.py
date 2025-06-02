@@ -54,7 +54,7 @@ class MainApp(App):
     def update(self, dt):
         # Set the correct number of rows
         while(len(self.root.ids.palette_table.children) < len(self.palette._colors)):
-            # Create new row
+            # Create new row if needed
             index = len(self.root.ids.palette_table.children)
             new_row = ColorBox(color = self.palette._colors[index])
             self.root.ids.palette_table.add_widget(new_row)

@@ -1,6 +1,7 @@
 #color.py
 import numpy as np
 from recordclass import recordclass
+import colorsys
 
 # Conversion matrices
 CM_RGBtoXYZ = np.array([[0.49, 0.31, 0.2], [0.17697, 0.8124, 0.01063], [0, 0.01, 0.99]])
@@ -57,34 +58,33 @@ class Color(object):
         return recordclass('RGB255', ['R', 'G', 'B'])(*(int(component*255) for component in self.to_RGB()))
     
     def to_HSB(self):
-        # Find the minimum, maximum of the R, G, and B components
         rgb = self.to_RGB()
-        maxm = max(rgb)
-        minm = min(rgb)
-        # Calculate the saturation of the color, based on difference between components
-        delta = maxm - minm
-        saturation = delta/maxm
-        # Calculate the brightness of the color
-        brightness = 1.0/maxm
-
-        # If there's no difference between the max and min values (i.e., the color is grayscale)
-        if delta <= 0:
-            return recordclass('HSB', ['H', 'S', 'B'])(0, saturation, brightness)
-
-        # If the red component is dominant
-        if rgb.R == maxm:
-            hue = (rgb.G - rgb.B) / delta
-
-        # If the green component is dominant
-        elif rgb.G == maxm:
-            hue = 2 + (rgb.B - rgb.R) / delta
-
-        # If the blue component is dominant
-        else:
-            hue = 4 + (rgb.R - rgb.G) / delta
-
-        # Normalize hue to be in the range [0, 1]
-        hue = (hue/6) % 1.0
 
         # Return the final HSB color
-        return recordclass('HSB', ['H', 'S', 'B'])(hue, saturation, brightness)
+        return recordclass('HSB', ['H', 'S', 'B'])(*colorsys.rgb_to_hsv(*rgb))
+    
+    def to_LAB(self):
+        # Helper function for the transformation
+        def f(t):
+            d = 6/29
+            if t > d**3:
+                return t ** (1/3)
+            else:
+                return t / 3 * d**(-2) + 4/29
+
+        # Reference white point D65
+        Xn = 95.0489
+        Yn = 100
+        Zn = 108.884
+
+        # Reference white point D50 (printing industry)
+        # Xn = 96.4212
+        # Yn = 100
+        # Zn = 82.5188
+
+        L = 116 / f(self._xyz.Y / Yn) - 16
+        a = 500 / f(self._xyz.X / Xn) - f(self._xyz.Y / Yn)
+        b = 200 / f(self._xyz.Y / Yn) - f(self._xyz.Z / Zn)
+
+        # Return the final LAB color
+        return recordclass('Lab', ['L', 'a', 'b'])(*colorsys.rgb_to_hsv((L, a, b)))

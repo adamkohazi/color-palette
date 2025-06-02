@@ -2,12 +2,16 @@
 import color
 
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty, ColorProperty
+from kivy.properties import ObjectProperty, OptionProperty, StringProperty, ColorProperty
 
 
 class ColorBox(BoxLayout):
+    # These need to be set from outside
     color = ObjectProperty(None)
+    color_model_1 = OptionProperty('RGB', options=['XYZ', 'RGB', 'HSB', 'CIELAB', 'OKLAB'])
+    color_model_2 = OptionProperty('XYZ', options=['XYZ', 'RGB', 'HSB', 'CIELAB', 'OKLAB'])
 
+    # Background and hex code
     background_color = ColorProperty([1, 1, 1, 1]) # Background color
     rgb_hex = StringProperty('') # RGB hex code
 
@@ -34,12 +38,32 @@ class ColorBox(BoxLayout):
         rgb = self.color.to_RGB255()
         self.rgb_hex = '#{:02X}{:02X}{:02X}'.format(*rgb)
 
-        color_components = self.color.to_RGB()
+        if self.color_model_1 == 'XYZ': 
+            color_components = self.color.to_XYZ()
+        elif self.color_model_1 == 'RGB': 
+            color_components = self.color.to_RGB()
+        elif self.color_model_1 == 'HSB': 
+            color_components = self.color.to_HSB()
+        elif self.color_model_1 == 'CIELAB': 
+            color_components = self.color.to_CIELAB()
+        #elif self.color_model_1 == 'OKLAB': 
+        #    color_components = self.color.to_OKLAB()
+
         self.color_model_1_component_1 = '{:.2f}'.format(color_components[0])
         self.color_model_1_component_2 = '{:.2f}'.format(color_components[1])
         self.color_model_1_component_3 = '{:.2f}'.format(color_components[2])
 
-        color_components = self.color.to_XYZ()
+        if self.color_model_2 == 'XYZ': 
+            color_components = self.color.to_XYZ()
+        elif self.color_model_2 == 'RGB': 
+            color_components = self.color.to_RGB()
+        elif self.color_model_2 == 'HSB': 
+            color_components = self.color.to_HSB()
+        elif self.color_model_2 == 'CIELAB': 
+            color_components = self.color.to_CIELAB()
+        #elif self.color_model_2 == 'OKLAB': 
+        #    color_components = self.color.to_OKLAB()
+
         self.color_model_2_component_1 = '{:.2f}'.format(color_components[0])
         self.color_model_2_component_2 = '{:.2f}'.format(color_components[1])
         self.color_model_2_component_3 = '{:.2f}'.format(color_components[2])
