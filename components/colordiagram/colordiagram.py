@@ -43,6 +43,27 @@ class ColorDiagram(BoxLayout):
             elif self.diagram_type.text == 'RB':
                 # Update 2D scatter plot
                 point.set_offsets((rgb.R, rgb.B))
+        
+            
+            elif self.diagram_type.text == 'HSB':
+                # Update 3D scatter plot
+                hsb = color.to_HSB()
+                point._offsets3d = ([hsb.H], [hsb.S], [hsb.B])
+        
+            elif self.diagram_type.text == 'HS':
+                # Update 2D scatter plot
+                hsb = color.to_HSB()
+                point.set_offsets((hsb.H, hsb.S))
+            
+            elif self.diagram_type.text == 'SB':
+                # Update 2D scatter plot
+                hsb = color.to_HSB()
+                point.set_offsets((hsb.S, hsb.B))
+            
+            elif self.diagram_type.text == 'HB':
+                # Update 2D scatter plot
+                hsb = color.to_HSB()
+                point.set_offsets((hsb.H, hsb.B))
 
         plt.draw()
 
@@ -64,7 +85,7 @@ class ColorDiagram(BoxLayout):
             # Plot point by point, each with own color
             for color in self.palette._colors:
                 rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.R, rgb.G, rgb.B, s=50.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                point = self.axes.scatter(rgb.R, rgb.G, rgb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -86,7 +107,7 @@ class ColorDiagram(BoxLayout):
             # Plot point by point, each with own color
             for color in self.palette._colors:
                 rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.R, rgb.G, s=50.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                point = self.axes.scatter(rgb.R, rgb.G, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -104,7 +125,7 @@ class ColorDiagram(BoxLayout):
             # Plot point by point, each with own color
             for color in self.palette._colors:
                 rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.G, rgb.B, s=50.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                point = self.axes.scatter(rgb.G, rgb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -122,7 +143,7 @@ class ColorDiagram(BoxLayout):
             # Plot point by point, each with own color
             for color in self.palette._colors:
                 rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.R, rgb.B, s=50.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                point = self.axes.scatter(rgb.R, rgb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -131,6 +152,87 @@ class ColorDiagram(BoxLayout):
 
             # Set labels
             self.axes.set_xlabel('R')
+            self.axes.set_ylabel('B')
+        
+
+        if self.diagram_type.text == 'HSB':
+            # 3D scatter plot
+            self.axes = self.figure.add_subplot(projection='3d')
+
+            # Plot point by point, each with own color
+            for color in self.palette._colors:
+                rgb = color.to_RGB()
+                hsb = color.to_HSB()
+                point = self.axes.scatter(hsb.H, hsb.S, hsb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                self.points.append(point)
+
+            # Set range
+            self.axes.set_xlim((-0.02, 1.02))
+            self.axes.set_ylim((-0.02, 1.02))
+            self.axes.set_zlim((-0.02, 1.02))
+
+            # Set labels
+            self.axes.set_xlabel('H')
+            self.axes.set_ylabel('S')
+            
+            # 3rd axis
+            self.axes.tick_params(axis='z', colors='white')
+        
+        if self.diagram_type.text == 'HS':
+            # 2D scatter plot
+            self.axes = self.figure.add_subplot()
+
+            # Plot point by point, each with own color
+            for color in self.palette._colors:
+                rgb = color.to_RGB()
+                hsb = color.to_HSB()
+                point = self.axes.scatter(hsb.H, hsb.S, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                self.points.append(point)
+
+            # Set range
+            self.axes.set_xlim((-0.02, 1.02))
+            self.axes.set_ylim((-0.02, 1.02))
+
+            # Set labels
+            self.axes.set_xlabel('H')
+            self.axes.set_ylabel('S')
+        
+        if self.diagram_type.text == 'SB':
+            # 2D scatter plot
+            self.axes = self.figure.add_subplot()
+
+            # Plot point by point, each with own color
+            for color in self.palette._colors:
+                rgb = color.to_RGB()
+                hsb = color.to_HSB()
+                point = self.axes.scatter(hsb.S, hsb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                self.points.append(point)
+
+            # Set range
+            self.axes.set_xlim((-0.02, 1.02))
+            self.axes.set_ylim((-0.02, 1.02))
+
+            # Set labels
+            self.axes.set_xlabel('S')
+            self.axes.set_ylabel('B')
+
+        if self.diagram_type.text == 'HB':
+            # 2D scatter plot
+            self.axes = self.figure.add_subplot()
+
+            # Plot point by point, each with own color
+            for color in self.palette._colors:
+                rgb = color.to_RGB()
+                hsb = color.to_HSB()
+                point = self.axes.scatter(hsb.H, hsb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                self.points.append(point)
+
+            # Set range
+            self.axes.set_xlim((-0.02, 1.02))
+            self.axes.set_ylim((-0.02, 1.02))
+
+            # Set labels
+            self.axes.set_xlabel('H')
             self.axes.set_ylabel('B')
 
         # Set color (white)
