@@ -63,7 +63,7 @@ class Color(object):
         # Return the final HSB color
         return recordclass('HSB', ['H', 'S', 'B'])(*colorsys.rgb_to_hsv(*rgb))
     
-    def to_LAB(self):
+    def to_CIELAB(self):
         # Helper function for the transformation
         def f(t):
             d = 6/29

@@ -3,6 +3,7 @@
 
 #:include components/widgets.kv
 #:include components/colorbox/colorbox.kv
+#:include components/colortable/colortable.kv
 #:include components/colordiagram/colordiagram.kv
 
 StackLayout:
@@ -19,45 +20,8 @@ StackLayout:
         Heading1:
             text: 'Color palette'
 
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: 30
-
-            TableHeader:
-                size_hint_x: None
-                width: 30
-                text: 'Del'
-            
-            TableHeader:
-                size_hint_x: None
-                width: 100
-                text: 'RGB hex'
-            
-            TableHeader:
-                text: 'R'
-            
-            TableHeader:
-                text: 'G'
-            
-            TableHeader:
-                text: 'B'
-            
-            TableHeader:
-                text: 'X'
-            
-            TableHeader:
-                text: 'Y'
-            
-            TableHeader:
-                text: 'Z'
-        
-        BoxLayout:
-            id: palette_table
-            orientation: 'vertical'
-            size_hint_y: None
-            height: self.minimum_height  # Adjust height based on content
-
+        ColorTable:
+            id: color_entry_table
             
         Button:
             size_hint_y: None

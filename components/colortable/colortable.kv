@@ -1,0 +1,51 @@
+#:kivy 2.3.0
+# colortable.kv
+
+<TableHeader@Label>:
+    size_hint_y: None
+    height: 25
+    bold: True
+    text_size: self.size
+    halign: 'center'
+
+<ColorTable>:
+    orientation: 'vertical'
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 30
+
+        TableHeader:
+            size_hint_x: None
+            width: 30
+            text: 'Del'
+        
+        TableHeader:
+            size_hint_x: None
+            width: 100
+            text: 'RGB hex'
+        
+        TableHeader:
+            text: 'R'
+        
+        TableHeader:
+            text: 'G'
+        
+        TableHeader:
+            text: 'B'
+        
+        TableHeader:
+            text: 'X'
+        
+        TableHeader:
+            text: 'Y'
+        
+        TableHeader:
+            text: 'Z'
+        
+    BoxLayout:
+        id: color_entries
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height  # Adjust height based on content
