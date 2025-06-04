@@ -65,7 +65,7 @@ class ColorDiagram(BoxLayout):
                 hsb = color.to_HSB()
                 point.set_offsets((hsb.H, hsb.B))
 
-        plt.draw()
+        self._canvas.draw()
 
     def create(self):
         # Clear area
@@ -246,4 +246,5 @@ class ColorDiagram(BoxLayout):
         self.axes.patch.set_facecolor((0.23, 0.23, 0.23))
 
         # Draw content
-        self.diagram_area.add_widget(FigureCanvasKivyAgg(self.figure))
+        self._canvas = FigureCanvasKivyAgg(self.figure)
+        self.diagram_area.add_widget(self._canvas)
