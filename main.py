@@ -24,11 +24,11 @@ class MainApp(App):
         # Initialize palette
         self.palette = palette.Palette()
         # Color palette of the GUI
-        self.palette.append(color.Color.from_RGB_hex("#000000"))
-        self.palette.append(color.Color.from_RGB_hex("#222222"))
-        self.palette.append(color.Color.from_RGB_hex("#3B3B3B"))
-        self.palette.append(color.Color.from_RGB_hex("#6B6B6B"))
-        self.palette.append(color.Color.from_RGB_hex("#E2E2E2"))
+        self.palette.append(color.Color.from_sRGB_hex("#000000"))
+        self.palette.append(color.Color.from_sRGB_hex("#222222"))
+        self.palette.append(color.Color.from_sRGB_hex("#3B3B3B"))
+        self.palette.append(color.Color.from_sRGB_hex("#6B6B6B"))
+        self.palette.append(color.Color.from_sRGB_hex("#E2E2E2"))
 
         # Set window size
         Window.size = (960, 600)
@@ -42,8 +42,8 @@ class MainApp(App):
 
     def initialize(self, dt):
         # Bind the buttons only once everything is built
-        self.root.ids.randomize.generate_palette = self.palette.generate_RGB_random
-        self.root.ids.cosine.generate_palette = self.palette.generate_RGB_cosine
+        self.root.ids.randomize.generate_palette = self.palette.generate_sRGB_random
+        self.root.ids.cosine.generate_palette = self.palette.generate_sRGB_cosine
 
         self.root.ids.color_entry_table.palette = self.palette
         self.root.ids.diagram1.palette = self.palette

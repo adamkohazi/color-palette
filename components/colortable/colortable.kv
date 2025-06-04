@@ -10,6 +10,36 @@
 
 <ColorTable>:
     orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height  # Adjust height based on content
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 30
+
+        TableHeader: # Just a spacer for the buttons
+            size_hint_x: None
+            width: 130
+            text: ''
+        
+        Spinner:
+            text: 'sRGB'
+            values: ['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB']
+            on_text:
+                root.color_model_1 = self.text
+                cm_1_1.text = self.text[-3]
+                cm_1_2.text = self.text[-2]
+                cm_1_3.text = self.text[-1]
+        
+        Spinner:
+            text: 'XYZ'
+            values: ['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB']
+            on_text:
+                root.color_model_2 = self.text
+                cm_2_1.text = self.text[-3]
+                cm_2_2.text = self.text[-2]
+                cm_2_3.text = self.text[-1]
 
     BoxLayout:
         orientation: 'horizontal'
@@ -24,24 +54,30 @@
         TableHeader:
             size_hint_x: None
             width: 100
-            text: 'RGB hex'
+            text: 'sRGB hex'
         
         TableHeader:
+            id: cm_1_1
             text: 'R'
         
         TableHeader:
+            id: cm_1_2
             text: 'G'
         
         TableHeader:
+            id: cm_1_3
             text: 'B'
         
         TableHeader:
+            id: cm_2_1
             text: 'X'
         
         TableHeader:
+            id: cm_2_2
             text: 'Y'
         
         TableHeader:
+            id: cm_2_3
             text: 'Z'
         
     BoxLayout:
