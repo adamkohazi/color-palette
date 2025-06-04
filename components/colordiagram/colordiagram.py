@@ -24,25 +24,25 @@ class ColorDiagram(BoxLayout):
         
         for point, color in zip(self.points, self.palette._colors):
             # Update point color
-            rgb = color.to_RGB()
-            point.set_color(rgb)
+            srgb = color.to_sRGB()
+            point.set_color(srgb)
             point.set_edgecolor('black')
 
             if self.diagram_type.text == 'RGB':
                 # Update 3D scatter plot
-                point._offsets3d = ([rgb.R], [rgb.G], [rgb.B])
+                point._offsets3d = ([srgb.R], [srgb.G], [srgb.B])
         
             elif self.diagram_type.text == 'RG':
                 # Update 2D scatter plot
-                point.set_offsets((rgb.R, rgb.G))
+                point.set_offsets((srgb.R, srgb.G))
             
             elif self.diagram_type.text == 'GB':
                 # Update 2D scatter plot
-                point.set_offsets((rgb.G, rgb.B))
+                point.set_offsets((srgb.G, srgb.B))
             
             elif self.diagram_type.text == 'RB':
                 # Update 2D scatter plot
-                point.set_offsets((rgb.R, rgb.B))
+                point.set_offsets((srgb.R, srgb.B))
         
             
             elif self.diagram_type.text == 'HSB':
@@ -84,8 +84,8 @@ class ColorDiagram(BoxLayout):
 
             # Plot point by point, each with own color
             for color in self.palette._colors:
-                rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.R, rgb.G, rgb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                srgb = color.to_sRGB()
+                point = self.axes.scatter(srgb.R, srgb.G, srgb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -106,8 +106,8 @@ class ColorDiagram(BoxLayout):
 
             # Plot point by point, each with own color
             for color in self.palette._colors:
-                rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.R, rgb.G, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                srgb = color.to_sRGB()
+                point = self.axes.scatter(srgb.R, srgb.G, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -124,8 +124,8 @@ class ColorDiagram(BoxLayout):
 
             # Plot point by point, each with own color
             for color in self.palette._colors:
-                rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.G, rgb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                srgb = color.to_sRGB()
+                point = self.axes.scatter(srgb.G, srgb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -142,8 +142,8 @@ class ColorDiagram(BoxLayout):
 
             # Plot point by point, each with own color
             for color in self.palette._colors:
-                rgb = color.to_RGB()
-                point = self.axes.scatter(rgb.R, rgb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                srgb = color.to_sRGB()
+                point = self.axes.scatter(srgb.R, srgb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -161,9 +161,9 @@ class ColorDiagram(BoxLayout):
 
             # Plot point by point, each with own color
             for color in self.palette._colors:
-                rgb = color.to_RGB()
+                srgb = color.to_sRGB()
                 hsb = color.to_HSB()
-                point = self.axes.scatter(hsb.H, hsb.S, hsb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                point = self.axes.scatter(hsb.H, hsb.S, hsb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -184,9 +184,9 @@ class ColorDiagram(BoxLayout):
 
             # Plot point by point, each with own color
             for color in self.palette._colors:
-                rgb = color.to_RGB()
+                srgb = color.to_sRGB()
                 hsb = color.to_HSB()
-                point = self.axes.scatter(hsb.H, hsb.S, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                point = self.axes.scatter(hsb.H, hsb.S, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -203,9 +203,9 @@ class ColorDiagram(BoxLayout):
 
             # Plot point by point, each with own color
             for color in self.palette._colors:
-                rgb = color.to_RGB()
+                srgb = color.to_sRGB()
                 hsb = color.to_HSB()
-                point = self.axes.scatter(hsb.S, hsb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                point = self.axes.scatter(hsb.S, hsb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
@@ -222,9 +222,9 @@ class ColorDiagram(BoxLayout):
 
             # Plot point by point, each with own color
             for color in self.palette._colors:
-                rgb = color.to_RGB()
+                srgb = color.to_sRGB()
                 hsb = color.to_HSB()
-                point = self.axes.scatter(hsb.H, hsb.B, s=100.0, marker='o', color=rgb, edgecolor='black', linewidth=1)
+                point = self.axes.scatter(hsb.H, hsb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
