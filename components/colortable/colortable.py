@@ -8,8 +8,8 @@ from components.colorbox.colorbox import ColorBox
 class ColorTable(BoxLayout):
     # These need to be set from outside
     palette = ObjectProperty(None)
-    color_model_1 = OptionProperty('sRGB', options=['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB'])
-    color_model_2 = OptionProperty('XYZ', options=['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB'])
+    color_model_1 = OptionProperty('sRGB', options=['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB', 'OKLAB'])
+    color_model_2 = OptionProperty('XYZ', options=['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB', 'OKLAB'])
 
     def on_palette(self, instance, value):
         if isinstance(value, palette.Palette):

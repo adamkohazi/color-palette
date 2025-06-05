@@ -7,7 +7,7 @@ import colorsys
 
 
 
-# Conversion matrices
+# Matrices to convert between CIE linear RGB and CIE-XYZ
 CM_CIERGBtoCIEXYZ = np.array([
     [0.49000, 0.31000, 0.20000],
     [0.17697, 0.81240, 0.01063],
@@ -15,7 +15,7 @@ CM_CIERGBtoCIEXYZ = np.array([
 ])
 CM_CIEXYZtoCIERGB = np.linalg.inv(CM_CIERGBtoCIEXYZ)
 
-
+# Matrices to convert between linear RGB and CIE-XYZ
 CM_RGBtoCIEXYZ = np.array([
     [0.4124564, 0.3575761, 0.1804375],
     [0.2126729, 0.7151522, 0.0721750],
@@ -23,10 +23,27 @@ CM_RGBtoCIEXYZ = np.array([
 ])
 CM_CIEXYZtoRGB = np.linalg.inv(CM_RGBtoCIEXYZ)
 
+# Matrix to convert from XYZ to LMS
+CM_CIEXYZ_LMS = np.array([
+    [0.8189330101, 0.3618667424, -0.1288597137],
+    [0.0329845436, 0.9293118715, 0.0361456387],
+    [0.0482003018, 0.2643662691, 0.6338517070]
+])
+CM_LMS_CIEXYZ = np.linalg.inv(CM_CIEXYZ_LMS)
+
+# Matrix to convert from LMS to Oklab
+CM_LMS_OKLAB = np.array([
+    [0.2104542553, 0.7936177850, -0.0040720468],
+    [1.9779984951, -2.4285922050, 0.4505937099],
+    [0.0259040371, 0.7827717662, -0.8086757660]
+])
+CM_OKLAB_LMS = np.linalg.inv(CM_LMS_OKLAB)
+
 class Color(object):
     def __init__(self, xyz=[0,0,0]):
         self._xyz = recordclass('XYZ', ['X', 'Y', 'Z'])(*xyz)
     
+    # Helper functions
     @staticmethod
     def RGB_to_sRGB(rgb):
         srgb = [12.92 * c if c <= 0.0031308 else 1.055 * (c ** (1 / 2.4)) - 0.055 for c in rgb]
@@ -37,35 +54,18 @@ class Color(object):
         rgb = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in srgb]
         return recordclass('RGB', ['R', 'G', 'B'])(*rgb)
 
-    @classmethod
-    def copy(cls, color):
-        return cls(color.to_XYZ())
-    
-    @classmethod
-    def from_RGB(cls, rgb):
-        return cls(CM_RGBtoCIEXYZ.dot(rgb))
-
-    @classmethod
-    def from_sRGB(cls, srgb):
-        return cls(CM_RGBtoCIEXYZ.dot(Color.sRGB_to_RGB(srgb)))
-
-    @classmethod
-    def from_sRGB255(cls, rgb):
-        return cls.from_sRGB(tuple(component/255 for component in rgb))
-
-    @classmethod
-    def from_sRGB_hex(cls, hex):
-        # Only work on last 6 characters
-        hex = hex[-6:]
-        rgb = tuple(int(hex[i:i+2], 16) / 255.0 for i in (0, 2, 4))
-        return cls.from_sRGB(rgb)
-
+    # CIE XYZ color space
     def set_XYZ(self, xyz):
         self._xyz = recordclass('XYZ', ['X', 'Y', 'Z'])(*xyz)
     
+    def to_XYZ(self):
+        return self._xyz
+    
+    # CIE XYZ color space
     def set_RGB(self, rgb):
         self._xyz = recordclass('XYZ', ['X', 'Y', 'Z'])(*CM_RGBtoCIEXYZ.dot(rgb))
     
+    # sRGB color space
     def set_sRGB(self, srgb):
         self._xyz = recordclass('XYZ', ['X', 'Y', 'Z'])(*CM_RGBtoCIEXYZ.dot(self.sRGB_to_RGB(srgb)))
 
@@ -77,9 +77,19 @@ class Color(object):
         hex = hex[-6:]
         rgb = tuple(int(hex[i:i+2], 16) / 255.0 for i in (0, 2, 4))
         self.set_sRGB(rgb)
+    
+    def set_OKLAB(self, lab):
+        # Convert Oklab to LMS
+        lms = CM_OKLAB_LMS.dot(lab)
 
-    def to_XYZ(self):
-        return self._xyz
+        # Apply cube nonlinearity
+        lms = np.power(lms, 3)
+
+        # Convert XYZ to LMS
+        x, y, z = CM_LMS_CIEXYZ.dot(self.lms)
+        self._xyz = recordclass('XYZ', ['X', 'Y', 'Z'])(x, y, z)
+
+
     
     # Linear RGB
     def to_RGB(self):
@@ -90,13 +100,13 @@ class Color(object):
 
     # Gamma corrected RGB
     def to_sRGB(self):
-        return recordclass('RGB', ['R', 'G', 'B'])(*self.RGB_to_sRGB(self.to_RGB()))
+        return recordclass('sRGB', ['R', 'G', 'B'])(*self.RGB_to_sRGB(self.to_RGB()))
     
     def to_sRGBA(self):
-        return recordclass('RGB', ['R', 'G', 'B', 'A'])(*self.RGB_to_sRGB(self.to_RGB()), 1.0)
+        return recordclass('sRGB', ['R', 'G', 'B', 'A'])(*self.RGB_to_sRGB(self.to_RGB()), 1.0)
     
     def to_sRGB255(self):
-        return recordclass('RGB255', ['R', 'G', 'B'])(*(int(component*255) for component in self.RGB_to_sRGB(self.to_RGB())))
+        return recordclass('sRGB255', ['R', 'G', 'B'])(*(int(component*255) for component in self.RGB_to_sRGB(self.to_RGB())))
     
     def to_HSB(self):
         rgb = self.to_RGB()
@@ -127,5 +137,18 @@ class Color(object):
         a = 500.0 * (f(100.0*self._xyz.X / Xn) - f(100.0*self._xyz.Y / Yn))
         b = 200.0 * (f(100.0*self._xyz.Y / Yn) - f(100.0*self._xyz.Z / Zn))
 
-        # Return the final LAB color
-        return recordclass('Lab', ['L', 'a', 'b'])(L, a, b)
+        # Return the final color
+        return recordclass('CIELAB', ['L', 'a', 'b'])(L, a, b)
+    
+    def to_OKLAB(self):
+        # Convert XYZ to LMS
+        lms = CM_CIEXYZ_LMS.dot(self._xyz)
+
+        # Apply cube root nonlinearity
+        lms = np.cbrt(lms)
+
+        # Convert LMS to Oklab
+        L, a, b = CM_LMS_OKLAB.dot(lms)
+
+        # Return the final color
+        return recordclass('Oklab', ['L', 'a', 'b'])(L, a, b)

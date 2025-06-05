@@ -24,11 +24,10 @@ class MainApp(App):
         # Initialize palette
         self.palette = palette.Palette()
         # Color palette of the GUI
-        self.palette.append(color.Color.from_sRGB_hex("#000000"))
-        self.palette.append(color.Color.from_sRGB_hex("#222222"))
-        self.palette.append(color.Color.from_sRGB_hex("#3B3B3B"))
-        self.palette.append(color.Color.from_sRGB_hex("#6B6B6B"))
-        self.palette.append(color.Color.from_sRGB_hex("#E2E2E2"))
+        for hex in ["#000000", "#222222", "#3B3B3B", "#6B6B6B", "#E2E2E2"]:
+            c = color.Color()
+            c.set_sRGB_hex(hex)
+            self.palette.append(c)
 
         # Set window size
         Window.size = (960, 600)
