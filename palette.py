@@ -13,10 +13,7 @@ class Palette(object):
     
     def append(self, new_color=None):
         if new_color is None:
-            if len(self._colors) > 0:
-                self._colors.append(color.Color.copy(self._colors[-1]))
-            else:
-                self._colors.append(color.Color())
+            self._colors.append(color.Color())
         else:
             self._colors.append(new_color)
     

@@ -8,8 +8,8 @@ from kivy.properties import ObjectProperty, OptionProperty, StringProperty, Colo
 class ColorBox(BoxLayout):
     # These need to be set from outside
     color = ObjectProperty(None)
-    color_model_1 = OptionProperty('sRGB', options=['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB'])
-    color_model_2 = OptionProperty('XYZ', options=['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB'])
+    color_model_1 = OptionProperty('sRGB', options=['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB', 'OKLAB'])
+    color_model_2 = OptionProperty('XYZ', options=['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB', 'OKLAB'])
 
     # Background and hex code
     background_color = ColorProperty([1, 1, 1, 1]) # Background color
@@ -50,8 +50,8 @@ class ColorBox(BoxLayout):
             color_components = self.color.to_XYZ()
         elif self.color_model_1 == 'CIELAB': 
             color_components = self.color.to_CIELAB()
-        #elif self.color_model_1 == 'OKLAB': 
-        #    color_components = self.color.to_OKLAB()
+        elif self.color_model_1 == 'OKLAB': 
+            color_components = self.color.to_OKLAB()
 
         self.color_model_1_component_1 = '{:.2f}'.format(color_components[0])
         self.color_model_1_component_2 = '{:.2f}'.format(color_components[1])
@@ -69,8 +69,8 @@ class ColorBox(BoxLayout):
             color_components = self.color.to_XYZ()
         elif self.color_model_2 == 'CIELAB': 
             color_components = self.color.to_CIELAB()
-        #elif self.color_model_1 == 'OKLAB': 
-        #    color_components = self.color.to_OKLAB()
+        elif self.color_model_2 == 'OKLAB': 
+            color_components = self.color.to_OKLAB()
 
         self.color_model_2_component_1 = '{:.2f}'.format(color_components[0])
         self.color_model_2_component_2 = '{:.2f}'.format(color_components[1])

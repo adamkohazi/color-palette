@@ -25,7 +25,7 @@
         
         Spinner:
             text: 'sRGB'
-            values: ['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB']
+            values: ['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB', 'OKLAB']
             on_text:
                 root.color_model_1 = self.text
                 cm_1_1.text = self.text[-3]
@@ -34,7 +34,7 @@
         
         Spinner:
             text: 'XYZ'
-            values: ['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB']
+            values: ['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB', 'OKLAB']
             on_text:
                 root.color_model_2 = self.text
                 cm_2_1.text = self.text[-3]
