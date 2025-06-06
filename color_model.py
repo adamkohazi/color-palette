@@ -53,16 +53,14 @@ CIERGB = ColorModel(
 
 # Helper functions
 def RGB_to_sRGB(rgb):
-    srgb = [12.92 * c if c <= 0.0031308 else 1.055 * (c ** (1 / 2.4)) - 0.055 for c in rgb]
-    return recordclass('sRGB', ['R', 'G', 'B'])(*srgb)
+    return tuple(12.92 * c if c <= 0.0031308 else 1.055 * (c ** (1 / 2.4)) - 0.055 for c in rgb)
 
 def sRGB_to_RGB(srgb):
-    rgb = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in srgb]
-    return recordclass('RGB', ['R', 'G', 'B'])(*rgb)
+    return tuple(c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in srgb)
 
 SRGB = ColorModel(
     short_name = 'sRGB',
-    long_name = 'Gamma corrected sRGB',
+    long_name = 'standard RGB',
     component_names = ('R', 'G', 'B'),
     ranges = ((0,1), (0,1), (0,1)),
     to_CIEXYZ = lambda srgb: CIERGB.to_CIEXYZ(sRGB_to_RGB(srgb)),
@@ -70,8 +68,8 @@ SRGB = ColorModel(
 )
 
 SRGB255 = ColorModel(
-    short_name = 'sRGB',
-    long_name = 'Gamma corrected sRGB',
+    short_name = 'sRGB255',
+    long_name = '24-bit standard RGB',
     component_names = ('R', 'G', 'B'),
     ranges = ((0,255), (0,255), (0,255)),
     to_CIEXYZ = lambda srgb255: SRGB.to_CIEXYZ(tuple(component/255 for component in srgb255)),
@@ -99,7 +97,7 @@ def OKLAB_to_XYZ(lab):
     lms = np.power(lms, 3)
     # Convert XYZ to LMS
     x, y, z = CM_LMS_CIEXYZ.dot(lms)
-    return recordclass('XYZ', ['X', 'Y', 'Z'])(x, y, z)
+    return (x, y, z)
 
 def XYZ_to_OKLAB(xyz):
     # Convert XYZ to LMS
@@ -109,27 +107,27 @@ def XYZ_to_OKLAB(xyz):
     # Convert LMS to Oklab
     L, a, b = CM_LMS_OKLAB.dot(lms)
     # Return the final color
-    return recordclass('Oklab', ['L', 'a', 'b'])(L, a, b)
+    return (L, a, b)
 
 OKLAB = ColorModel(
     short_name = 'Oklab',
-    long_name = 'Gamma corrected sRGB',
+    long_name = 'Oklab',
     component_names = ('L', 'a', 'b'),
     ranges = ((0,1), (-0.5,0.5), (-0.5,0.5)),
     to_CIEXYZ = OKLAB_to_XYZ,
     from_CIEXYZ = XYZ_to_OKLAB
 )
 
-HSB = ColorModel(
-    short_name = 'HSB',
-    long_name = 'HSB',
-    component_names = ('H', 'S', 'B'),
+HSV = ColorModel(
+    short_name = 'HSV',
+    long_name = 'HSV in sRGB',
+    component_names = ('H', 'S', 'V'),
     ranges = ((0,1), (0,1), (0,1)),
     to_CIEXYZ = lambda hsb: SRGB.to_CIEXYZ(colorsys.hsv_to_rgb(*hsb)),
     from_CIEXYZ = lambda xyz: colorsys.rgb_to_hsv(*SRGB.from_CIEXYZ(xyz))
 )
 
-color_models = [CIEXYZ, CIERGB, SRGB, SRGB255, OKLAB, HSB]
+color_models = [CIEXYZ, CIERGB, SRGB, SRGB255, OKLAB, HSV]
 
 # CIE LAB
 def to_CIELAB(self):

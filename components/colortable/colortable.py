@@ -3,13 +3,13 @@ import palette
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty, OptionProperty
-from components.colorbox.colorbox import ColorBox
+from components.colorbox.colorbox import models, model1, model2, ColorBox
 
 class ColorTable(BoxLayout):
     # These need to be set from outside
     palette = ObjectProperty(None)
-    color_model_1 = OptionProperty('sRGB', options=['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB', 'OKLAB'])
-    color_model_2 = OptionProperty('XYZ', options=['RGB', 'sRGB', '24-bit sRGB', 'HSB', 'XYZ', 'CIELAB', 'OKLAB'])
+    color_model_1 = OptionProperty(model1, options=models)
+    color_model_2 = OptionProperty(model2, options=models)
 
     def on_palette(self, instance, value):
         if isinstance(value, palette.Palette):
