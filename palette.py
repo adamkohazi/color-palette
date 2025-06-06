@@ -2,6 +2,7 @@
 import color
 import random
 import math
+from color_model import SRGB
 
 class Palette(object):
     def __init__(self):
@@ -25,7 +26,7 @@ class Palette(object):
     
     def generate_sRGB_random(self, *args):
         for c in self._colors:
-            c.set_sRGB((random.random(), random.random(), random.random()))
+            c.set(SRGB, (random.random(), random.random(), random.random()))
     
     def generate_sRGB_cosine(self, a_r, b_r, c_r, d_r, a_g, b_g, c_g, d_g, a_b, b_b, c_b, d_b):
         for index in range(len(self._colors)):
@@ -33,4 +34,4 @@ class Palette(object):
             red = a_r + b_r * math.cos(2*math.pi * (c_r * phase + d_r))
             green = a_g + b_g * math.cos(2*math.pi * (c_g * phase + d_g))
             blue = a_b + b_b * math.cos(2*math.pi * (c_b * phase + d_b))
-            self._colors[index].set_sRGB((red, green, blue))
+            self._colors[index].set(SRGB, (red, green, blue))

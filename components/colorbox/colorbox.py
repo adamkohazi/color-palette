@@ -1,5 +1,6 @@
 
 import color
+from color_model import CIEXYZ, CIERGB, SRGB, SRGB255, OKLAB, HSB
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty, OptionProperty, StringProperty, ColorProperty
@@ -32,45 +33,42 @@ class ColorBox(BoxLayout):
             pass
     
     def update(self):
-        rgba = self.color.to_sRGBA()
-        self.background_color = rgba
-
-        rgb = self.color.to_sRGB255()
-        self.rgb_hex = '#{:02X}{:02X}{:02X}'.format(*rgb)
+        self.background_color = (*self.color.get(SRGB), 1.0)
+        self.rgb_hex = '#{:02X}{:02X}{:02X}'.format(*self.color.get(SRGB255))
 
         if self.color_model_1 == 'RGB': 
-            color_components = self.color.to_RGB()
+            color_components = self.color.get(CIERGB)
         elif self.color_model_1 == 'sRGB': 
-            color_components = self.color.to_sRGB()
+            color_components = self.color.get(SRGB)
         elif self.color_model_1 == '24-bit sRGB': 
-            color_components = self.color.to_sRGB255()
+            color_components = self.color.get(SRGB255)
         elif self.color_model_1 == 'HSB': 
-            color_components = self.color.to_HSB()
+            color_components = self.color.get(HSB)
         elif self.color_model_1 == 'XYZ': 
-            color_components = self.color.to_XYZ()
-        elif self.color_model_1 == 'CIELAB': 
-            color_components = self.color.to_CIELAB()
+            color_components = self.color.get(CIEXYZ)
+        #elif self.color_model_1 == 'CIELAB': 
+        #    color_components = self.color.to_CIELAB()
         elif self.color_model_1 == 'OKLAB': 
-            color_components = self.color.to_OKLAB()
+            color_components = self.color.get(OKLAB)
 
         self.color_model_1_component_1 = '{:.2f}'.format(color_components[0])
         self.color_model_1_component_2 = '{:.2f}'.format(color_components[1])
         self.color_model_1_component_3 = '{:.2f}'.format(color_components[2])
 
         if self.color_model_2 == 'RGB': 
-            color_components = self.color.to_RGB()
+            color_components = self.color.get(CIERGB)
         elif self.color_model_2 == 'sRGB': 
-            color_components = self.color.to_sRGB()
+            color_components = self.color.get(SRGB)
         elif self.color_model_2 == '24-bit sRGB': 
-            color_components = self.color.to_sRGB255()
+            color_components = self.color.get(SRGB255)
         elif self.color_model_2 == 'HSB': 
-            color_components = self.color.to_HSB()
+            color_components = self.color.get(HSB)
         elif self.color_model_2 == 'XYZ': 
-            color_components = self.color.to_XYZ()
-        elif self.color_model_2 == 'CIELAB': 
-            color_components = self.color.to_CIELAB()
+            color_components = self.color.get(CIEXYZ)
+        #elif self.color_model_2 == 'CIELAB': 
+        #    color_components = self.color.to_CIELAB()
         elif self.color_model_2 == 'OKLAB': 
-            color_components = self.color.to_OKLAB()
+            color_components = self.color.get(OKLAB)
 
         self.color_model_2_component_1 = '{:.2f}'.format(color_components[0])
         self.color_model_2_component_2 = '{:.2f}'.format(color_components[1])

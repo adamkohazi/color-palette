@@ -1,6 +1,7 @@
 #main.py
 import palette
 import color
+from color_model import CIERGB
 
 import matplotlib.pyplot as plt
 from kivy_garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
@@ -26,7 +27,9 @@ class MainApp(App):
         # Color palette of the GUI
         for hex in ["#000000", "#222222", "#3B3B3B", "#6B6B6B", "#E2E2E2"]:
             c = color.Color()
-            c.set_sRGB_hex(hex)
+            hex = hex[-6:]
+            rgb = tuple(int(hex[i:i+2], 16) / 255.0 for i in (0, 2, 4))
+            c.set(CIERGB, rgb)
             self.palette.append(c)
 
         # Set window size
