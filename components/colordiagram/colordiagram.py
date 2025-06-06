@@ -1,6 +1,6 @@
 
 import palette
-from color_model import CIEXYZ, CIERGB, SRGB, SRGB255, OKLAB, HSB
+from color_model import CIEXYZ, CIERGB, SRGB, SRGB255, OKLAB, HSV
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty

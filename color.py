@@ -7,7 +7,7 @@ class Color(object):
         self._xyz = recordclass('XYZ', ['X', 'Y', 'Z'])(*xyz)
 
     def set(self, color_model, components):
-        self._xyz = recordclass('XYZ', ['X', 'Y', 'Z'])(*color_model.to_CIEXYZ(components))
+        self._xyz.X, self._xyz.Y, self._xyz.Z = color_model.to_CIEXYZ(components)
     
     def get(self, color_model):
         return recordclass(color_model.short_name, color_model.component_names)(*color_model.from_CIEXYZ(self._xyz))
