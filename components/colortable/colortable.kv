@@ -24,22 +24,16 @@
             text: ''
         
         Spinner:
-            text: 'sRGB'
-            values: ['XYZ', 'sRGB', 'sRGB255', 'CIERGB', 'HSV', 'Oklab']
+            text: root.color_model_1
+            values: root.spinner_values
             on_text:
                 root.color_model_1 = self.text
-                cm_1_1.text = self.text[-3]
-                cm_1_2.text = self.text[-2]
-                cm_1_3.text = self.text[-1]
         
         Spinner:
-            text: 'XYZ'
-            values: ['XYZ', 'sRGB', 'sRGB255', 'CIERGB', 'HSV', 'Oklab']
+            text: root.color_model_2
+            values: root.spinner_values
             on_text:
                 root.color_model_2 = self.text
-                cm_2_1.text = self.text[-3]
-                cm_2_2.text = self.text[-2]
-                cm_2_3.text = self.text[-1]
 
     BoxLayout:
         orientation: 'horizontal'

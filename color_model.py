@@ -18,7 +18,6 @@ class ColorModel:
     to_CIEXYZ: Callable[[Tuple[float, float, float]], Tuple[float, float, float]]
     from_CIEXYZ: Callable[[Tuple[float, float, float]], Tuple[float, float, float]]
 
-
 CIEXYZ = ColorModel(
     short_name = 'XYZ',
     long_name = 'CIE XYZ',
@@ -127,8 +126,6 @@ HSV = ColorModel(
     from_CIEXYZ = lambda xyz: colorsys.rgb_to_hsv(*SRGB.from_CIEXYZ(xyz))
 )
 
-color_models = [CIEXYZ, CIERGB, SRGB, SRGB255, OKLAB, HSV]
-
 # CIE LAB
 def to_CIELAB(self):
     # Helper function for the transformation
@@ -155,3 +152,5 @@ def to_CIELAB(self):
 
     # Return the final color
     return recordclass('CIELAB', ['L', 'a', 'b'])(L, a, b)
+
+color_models = [CIEXYZ, CIERGB, SRGB, SRGB255, OKLAB, HSV]

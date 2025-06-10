@@ -3,15 +3,11 @@ import palette
 import color
 from color_model import CIERGB
 
-import matplotlib.pyplot as plt
-from kivy_garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
-
 from kivy.app import App
 from kivy.lang.builder import Builder
 from kivy.properties import *
 from kivy.clock import Clock
 from kivy.core.window import Window
-from kivy.properties import ObjectProperty
 
 from components.colorbox.colorbox import ColorBox
 from components.colortable.colortable import ColorTable
