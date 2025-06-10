@@ -22,6 +22,27 @@
             valign: 'middle'
         
         Spinner:
+            id: color_model
+            size_hint_x: 1
+            text: 'None'
+            values: ['None', 'RGB', 'RG', 'GB', 'RB', 'HSB', 'HS', 'SB', 'HB'] #XYZ
+            #on_text: root.create()
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 30  # Fixed row height
+        spacing: 10
+        
+        Label:
+            text: 'Type:'
+            size_hint_x: None
+            width: 100  # Fixed width
+            text_size: self.size
+            halign: 'right'
+            valign: 'middle'
+        
+        Spinner:
             id: diagram_type
             size_hint_x: 1
             text: 'None'
