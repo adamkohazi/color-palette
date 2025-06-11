@@ -10,4 +10,4 @@ class Color(object):
         self._xyz.X, self._xyz.Y, self._xyz.Z = color_model.to_CIEXYZ(components)
     
     def get(self, color_model):
-        return recordclass(color_model.short_name, color_model.component_names)(*color_model.from_CIEXYZ(self._xyz))
+        return recordclass(color_model.ID, color_model.component_names)(*color_model.from_CIEXYZ(self._xyz))

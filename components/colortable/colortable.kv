@@ -24,16 +24,16 @@
             text: ''
         
         Spinner:
-            text: root.color_model_1
+            text: root.color_model_1.ID
             values: root.spinner_values
             on_text:
-                root.color_model_1 = self.text
+                root.set_color_model_1(self.text)
         
         Spinner:
-            text: root.color_model_2
+            text: root.color_model_2.ID
             values: root.spinner_values
             on_text:
-                root.color_model_2 = self.text
+                root.set_color_model_2(self.text)
 
     BoxLayout:
         orientation: 'horizontal'
@@ -51,28 +51,22 @@
             text: 'sRGB hex'
         
         TableHeader:
-            id: cm_1_1
-            text: 'R'
+            text: root.color_model_1_component_1
         
         TableHeader:
-            id: cm_1_2
-            text: 'G'
+            text: root.color_model_1_component_2
         
         TableHeader:
-            id: cm_1_3
-            text: 'B'
+            text: root.color_model_1_component_3
         
         TableHeader:
-            id: cm_2_1
-            text: 'X'
+            text: root.color_model_2_component_1
         
         TableHeader:
-            id: cm_2_2
-            text: 'Y'
+            text: root.color_model_2_component_2
         
         TableHeader:
-            id: cm_2_3
-            text: 'Z'
+            text: root.color_model_2_component_3
         
     BoxLayout:
         id: color_entries

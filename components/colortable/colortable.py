@@ -10,10 +10,20 @@ class ColorTable(BoxLayout):
     # These need to be set from outside
     palette = ObjectProperty(None)
 
-    spinner_values = ListProperty([model.short_name for model in color_model.color_models])
+    spinner_values = ListProperty([model.ID for model in color_model.color_models])
 
-    color_model_1 = StringProperty("SRGB")
-    color_model_2 = StringProperty("XYZ")
+    color_model_1 = ObjectProperty(color_model.SRGB)
+    color_model_2 = ObjectProperty(color_model.CIEXYZ)
+
+    # First representation of color
+    color_model_1_component_1 = StringProperty('') # First color component, e.g. "R"
+    color_model_1_component_2 = StringProperty('') # Second color component, e.g. "G"
+    color_model_1_component_3 = StringProperty('') # Third color component, e.g. "B"
+
+    # Second representation of color
+    color_model_2_component_1 = StringProperty('') # First color component, e.g. "H"
+    color_model_2_component_2 = StringProperty('') # Second color component, e.g. "S"
+    color_model_2_component_3 = StringProperty('') # Third color component, e.g. "B"
 
     def on_palette(self, instance, value):
         if isinstance(value, palette.Palette):
@@ -21,21 +31,23 @@ class ColorTable(BoxLayout):
         else:
             pass
     
-    def on_color_model_1(self, instance, value):
-        model_1 = next((cm for cm in color_model.color_models if cm.short_name == self.color_model_1), None)
+    def set_color_model_1(self, ID):
+        self.color_model_1 = next((cm for cm in color_model.color_models if cm.ID == ID), None)
 
-        self.ids.cm_1_1, self.ids.cm_1_2, self.ids.cm_1_3 = model_1.component_names
+        self.color_model_1_component_1, self.color_model_1_component_2, self.color_model_1_component_3 = self.color_model_1.component_names
 
+        # Update color model for every row
         for row in self.ids.color_entries.children:
-            row.color_model_1 = model_1
+            row.color_model_1 = self.color_model_1
     
-    def on_color_model_2(self, instance, value):
-        model_2 = next((cm for cm in color_model.color_models if cm.short_name == self.color_model_2), None)
+    def set_color_model_2(self, ID):
+        self.color_model_2 = next((cm for cm in color_model.color_models if cm.ID == ID), None)
 
-        self.ids.cm_2_1, self.ids.cm_2_2, self.ids.cm_2_3 = model_2.component_names
-
+        self.color_model_2_component_1, self.color_model_2_component_2, self.color_model_2_component_3 = self.color_model_2.component_names
+        
+        # Update color model for every row
         for row in self.ids.color_entries.children:
-            row.color_model_2 = model_2
+            row.color_model_2 = self.color_model_2
 
     def update(self):
         # Set the correct number of rows
@@ -44,8 +56,8 @@ class ColorTable(BoxLayout):
             index = len(self.ids.color_entries.children)
             new_row = ColorBox(
                 color = self.palette._colors[index],
-                color_model_1 = next((cm for cm in color_model.color_models if cm.short_name == self.color_model_1), None),
-                color_model_2 = next((cm for cm in color_model.color_models if cm.short_name == self.color_model_2), None)
+                color_model_1 = self.color_model_1,
+                color_model_2 = self.color_model_2
             )
             self.ids.color_entries.add_widget(new_row)
             # Bind the remove button to remove that color from the palette
