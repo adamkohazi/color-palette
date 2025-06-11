@@ -11,16 +11,16 @@ AxisType = Enum('AxisType', 'distance angle')
 
 @dataclass
 class ColorModel:
-    short_name: str
-    long_name: str
+    ID: str
+    name: str
     component_names: Tuple[str, str, str]
     ranges: Tuple[Tuple[float, float], Tuple[float, float], Tuple[float, float]]
     to_CIEXYZ: Callable[[Tuple[float, float, float]], Tuple[float, float, float]]
     from_CIEXYZ: Callable[[Tuple[float, float, float]], Tuple[float, float, float]]
 
 CIEXYZ = ColorModel(
-    short_name = 'XYZ',
-    long_name = 'CIE XYZ',
+    ID = 'CIEXYZ',
+    name = 'CIE XYZ',
     component_names = ('X', 'Y', 'Z'),
     ranges = ((0,1), (0,1), (0,1)),
     to_CIEXYZ = lambda xyz: xyz,
@@ -42,8 +42,8 @@ CM_RGBtoCIEXYZ = np.array([
 CM_CIEXYZtoRGB = np.linalg.inv(CM_RGBtoCIEXYZ)
 
 CIERGB = ColorModel(
-    short_name = 'CIERGB',
-    long_name = 'CIE linear RGB',
+    ID = 'CIERGB',
+    name = 'CIE linear RGB',
     component_names = ('R', 'G', 'B'),
     ranges = ((0,1), (0,1), (0,1)),
     to_CIEXYZ = lambda rgb: CM_RGBtoCIEXYZ.dot(rgb),
@@ -58,8 +58,8 @@ def sRGB_to_RGB(srgb):
     return tuple(c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in srgb)
 
 SRGB = ColorModel(
-    short_name = 'sRGB',
-    long_name = 'standard RGB',
+    ID = 'sRGB',
+    name = 'standard RGB',
     component_names = ('R', 'G', 'B'),
     ranges = ((0,1), (0,1), (0,1)),
     to_CIEXYZ = lambda srgb: CIERGB.to_CIEXYZ(sRGB_to_RGB(srgb)),
@@ -67,8 +67,8 @@ SRGB = ColorModel(
 )
 
 SRGB255 = ColorModel(
-    short_name = 'sRGB255',
-    long_name = '24-bit standard RGB',
+    ID = 'sRGB255',
+    name = '24-bit standard RGB',
     component_names = ('R', 'G', 'B'),
     ranges = ((0,255), (0,255), (0,255)),
     to_CIEXYZ = lambda srgb255: SRGB.to_CIEXYZ(tuple(component/255 for component in srgb255)),
@@ -109,8 +109,8 @@ def XYZ_to_OKLAB(xyz):
     return (L, a, b)
 
 OKLAB = ColorModel(
-    short_name = 'Oklab',
-    long_name = 'Oklab',
+    ID = 'Oklab',
+    name = 'Oklab',
     component_names = ('L', 'a', 'b'),
     ranges = ((0,1), (-0.5,0.5), (-0.5,0.5)),
     to_CIEXYZ = OKLAB_to_XYZ,
@@ -118,8 +118,8 @@ OKLAB = ColorModel(
 )
 
 HSV = ColorModel(
-    short_name = 'HSV',
-    long_name = 'HSV in sRGB',
+    ID = 'HSV',
+    name = 'HSV in sRGB',
     component_names = ('H', 'S', 'V'),
     ranges = ((0,1), (0,1), (0,1)),
     to_CIEXYZ = lambda hsb: SRGB.to_CIEXYZ(colorsys.hsv_to_rgb(*hsb)),

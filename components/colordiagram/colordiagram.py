@@ -1,9 +1,10 @@
 
 import palette
+import color_model as cm
 from color_model import CIEXYZ, CIERGB, SRGB, SRGB255, OKLAB, HSV
 
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, StringProperty, ListProperty
 
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -11,7 +12,15 @@ import matplotlib.image as mpimg
 from kivy_garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
 class ColorDiagram(BoxLayout):
+    # These need to be set from outside
     palette = ObjectProperty(None)
+
+    color_models = ListProperty([model.ID for model in cm.color_models])
+
+    diagram_types = ListProperty(['3D Plot', '2D Plot'])
+
+    color_model = ObjectProperty(cm.SRGB)
+    component_names = ListProperty(cm.SRGB.component_names)
 
     def on_palette(self, instance, value):
         if isinstance(value, palette.Palette):
