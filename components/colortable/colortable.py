@@ -33,21 +33,25 @@ class ColorTable(BoxLayout):
     
     def set_color_model_1(self, ID):
         self.color_model_1 = next((cm for cm in color_model.color_models if cm.ID == ID), None)
+    
+    def on_color_model_1(self, instance, value):
+        if isinstance(value, color_model.ColorModel):
+            self.color_model_1_component_1, self.color_model_1_component_2, self.color_model_1_component_3 = self.color_model_1.component_names
 
-        self.color_model_1_component_1, self.color_model_1_component_2, self.color_model_1_component_3 = self.color_model_1.component_names
-
-        # Update color model for every row
-        for row in self.ids.color_entries.children:
-            row.color_model_1 = self.color_model_1
+            # Update color model for every row
+            for row in self.ids.color_entries.children:
+                row.color_model_1 = self.color_model_1
     
     def set_color_model_2(self, ID):
         self.color_model_2 = next((cm for cm in color_model.color_models if cm.ID == ID), None)
-
-        self.color_model_2_component_1, self.color_model_2_component_2, self.color_model_2_component_3 = self.color_model_2.component_names
-        
-        # Update color model for every row
-        for row in self.ids.color_entries.children:
-            row.color_model_2 = self.color_model_2
+    
+    def on_color_model_2(self, instance, value):
+        if isinstance(value, color_model.ColorModel):
+            self.color_model_2_component_1, self.color_model_2_component_2, self.color_model_2_component_3 = self.color_model_2.component_names
+            
+            # Update color model for every row
+            for row in self.ids.color_entries.children:
+                row.color_model_2 = self.color_model_2
 
     def update(self):
         # Set the correct number of rows

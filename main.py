@@ -55,8 +55,8 @@ class MainApp(App):
         self.root.ids.color_entry_table.update()
         
         # Update graphs
-        self.root.ids.diagram1.update()
-        self.root.ids.diagram2.update()
+        #self.root.ids.diagram1.update()
+        #self.root.ids.diagram2.update()
 
 if __name__ == "__main__":
     MainApp().run()

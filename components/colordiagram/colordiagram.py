@@ -15,8 +15,8 @@ class ColorDiagram(BoxLayout):
     # These need to be set from outside
     palette = ObjectProperty(None)
 
+    # Static properties
     color_models = ListProperty([model.ID for model in cm.color_models])
-
     diagram_types = ListProperty(['3D Plot', '2D Plot'])
 
     color_model = ObjectProperty(cm.SRGB)
@@ -24,226 +24,121 @@ class ColorDiagram(BoxLayout):
 
     def on_palette(self, instance, value):
         if isinstance(value, palette.Palette):
-            self.update()
-        else:
             pass
+            #self.update()
+    
+    def set_color_model(self, ID):
+        self.color_model = next((cm for cm in cm.color_models if cm.ID == ID), None)
+    
+    def on_color_model(self, instance, value):
+        if isinstance(value, cm.ColorModel):
+            self.component_names = value.component_names
+            self.ids.horizontal_axis.text = self.component_names[0]
+            self.ids.vertical_axis.text = self.component_names[1]
+            # Recreate diagram to correctly set ranges and labels
+            self.create()
     
     def update(self):
-        if self.diagram_type.text == 'None':
+        diagram_type = self.ids.diagram_type.text
+
+        # Validate color model and component names
+        if not isinstance(self.color_model, cm.ColorModel):
+            print("Invalid color model.")
             return
-        
-        for point, color in zip(self.points, self.palette._colors):
-            # Update point color
-            srgb = color.get(SRGB)
-            point.set_color(srgb)
-            point.set_edgecolor('black')
 
-            if self.diagram_type.text == 'RGB':
-                # Update 3D scatter plot
-                point._offsets3d = ([srgb.R], [srgb.G], [srgb.B])
-        
-            elif self.diagram_type.text == 'RG':
-                # Update 2D scatter plot
-                point.set_offsets((srgb.R, srgb.G))
-            
-            elif self.diagram_type.text == 'GB':
-                # Update 2D scatter plot
-                point.set_offsets((srgb.G, srgb.B))
-            
-            elif self.diagram_type.text == 'RB':
-                # Update 2D scatter plot
-                point.set_offsets((srgb.R, srgb.B))
-        
-            
-            elif self.diagram_type.text == 'HSB':
-                # Update 3D scatter plot
-                hsb = color.get(HSB)
-                point._offsets3d = ([hsb.H], [hsb.S], [hsb.B])
-        
-            elif self.diagram_type.text == 'HS':
-                # Update 2D scatter plot
-                hsb = color.get(HSB)
-                point.set_offsets((hsb.H, hsb.S))
-            
-            elif self.diagram_type.text == 'SB':
-                # Update 2D scatter plot
-                hsb = color.get(HSB)
-                point.set_offsets((hsb.S, hsb.B))
-            
-            elif self.diagram_type.text == 'HB':
-                # Update 2D scatter plot
-                hsb = color.get(HSB)
-                point.set_offsets((hsb.H, hsb.B))
+        try:
+            for point, color in zip(self.points, self.palette._colors):
+                srgb = color.get(SRGB)
+                point.set_color(srgb)
+                point.set_edgecolor('black')
 
-        self._canvas.draw()
+                components = color.get(self.color_model)
+
+                if diagram_type == '3D Plot':
+                    point._offsets3d = ([components[0]], [components[1]], [components[2]])
+
+                elif diagram_type == '2D Plot':
+
+                    horizontal_axis = self.ids.horizontal_axis.text
+                    vertical_axis = self.ids.vertical_axis.text
+
+                    if horizontal_axis not in self.color_model.component_names or vertical_axis not in self.color_model.component_names:
+                        print(f"Invalid axis names: {horizontal_axis}, {vertical_axis}")
+                        continue
+
+                    x_index = self.color_model.component_names.index(horizontal_axis)
+                    y_index = self.color_model.component_names.index(vertical_axis)
+
+                    x = components[x_index]
+                    y = components[y_index]
+                    point.set_offsets((x, y))
+            
+            self._canvas.draw()
+
+        except Exception as e:
+            print(f"Error updating plot: {e}")
 
     def create(self):
         # Clear area
-        self.diagram_area.clear_widgets()
+        self.ids.diagram_area.clear_widgets()
         self.points = []
 
-        if self.diagram_type.text == 'None':
+        if self.ids.diagram_type.text == 'None':
             return
         
         # Prepare chart
         self.figure = plt.figure()
 
-        if self.diagram_type.text == 'RGB':
+        if self.ids.diagram_type.text == '3D Plot':
             # 3D scatter plot
             self.axes = self.figure.add_subplot(projection='3d')
 
             # Plot point by point, each with own color
             for color in self.palette._colors:
                 srgb = color.get(SRGB)
-                point = self.axes.scatter(srgb.R, srgb.G, srgb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
+                # Get color componenets to plot
+                components = color.get(self.color_model)
+
+                point = self.axes.scatter(components[0], components[1], components[2], s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
-            self.axes.set_xlim((-0.02, 1.02))
-            self.axes.set_ylim((-0.02, 1.02))
-            self.axes.set_zlim((-0.02, 1.02))
+            self.axes.set_xlim(self.color_model.ranges[0])
+            self.axes.set_ylim(self.color_model.ranges[1])
+            #self.axes.set_zlim(self.color_model.ranges[2])
 
             # Set labels
-            self.axes.set_xlabel('R')
-            self.axes.set_ylabel('G')
+            self.axes.set_xlabel(self.color_model.component_names[0])
+            self.axes.set_ylabel(self.color_model.component_names[1])
+            #self.axes.set_zlabel(self.color_model.component_names[2])
             
             # 3rd axis
             self.axes.tick_params(axis='z', colors='white')
         
-        if self.diagram_type.text == 'RG':
+        if self.ids.diagram_type.text == '2D Plot':
             # 2D scatter plot
             self.axes = self.figure.add_subplot()
+
+            x_index = self.color_model.component_names.index(self.ids.horizontal_axis.text)
+            y_index = self.color_model.component_names.index(self.ids.vertical_axis.text)
 
             # Plot point by point, each with own color
             for color in self.palette._colors:
                 srgb = color.get(SRGB)
-                point = self.axes.scatter(srgb.R, srgb.G, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
+                components = color.get(self.color_model)
+                x = components[x_index]
+                y = components[y_index]
+                point = self.axes.scatter(x, y, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
                 self.points.append(point)
 
             # Set range
-            self.axes.set_xlim((-0.02, 1.02))
-            self.axes.set_ylim((-0.02, 1.02))
+            self.axes.set_xlim(self.color_model.ranges[x_index])
+            self.axes.set_ylim(self.color_model.ranges[y_index])
 
             # Set labels
-            self.axes.set_xlabel('R')
-            self.axes.set_ylabel('G')
+            self.axes.set_xlabel(self.color_model.component_names[x_index])
+            self.axes.set_ylabel(self.color_model.component_names[y_index])
         
-        if self.diagram_type.text == 'GB':
-            # 2D scatter plot
-            self.axes = self.figure.add_subplot()
-
-            # Plot point by point, each with own color
-            for color in self.palette._colors:
-                srgb = color.get(SRGB)
-                point = self.axes.scatter(srgb.G, srgb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
-                self.points.append(point)
-
-            # Set range
-            self.axes.set_xlim((-0.02, 1.02))
-            self.axes.set_ylim((-0.02, 1.02))
-
-            # Set labels
-            self.axes.set_xlabel('G')
-            self.axes.set_ylabel('B')
-
-        if self.diagram_type.text == 'RB':
-            # 2D scatter plot
-            self.axes = self.figure.add_subplot()
-
-            # Plot point by point, each with own color
-            for color in self.palette._colors:
-                srgb = color.get(SRGB)
-                point = self.axes.scatter(srgb.R, srgb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
-                self.points.append(point)
-
-            # Set range
-            self.axes.set_xlim((-0.02, 1.02))
-            self.axes.set_ylim((-0.02, 1.02))
-
-            # Set labels
-            self.axes.set_xlabel('R')
-            self.axes.set_ylabel('B')
-        
-
-        if self.diagram_type.text == 'HSB':
-            # 3D scatter plot
-            self.axes = self.figure.add_subplot(projection='3d')
-
-            # Plot point by point, each with own color
-            for color in self.palette._colors:
-                srgb = color.get(SRGB)
-                hsb = color.get(HSB)
-                point = self.axes.scatter(hsb.H, hsb.S, hsb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
-                self.points.append(point)
-
-            # Set range
-            self.axes.set_xlim((-0.02, 1.02))
-            self.axes.set_ylim((-0.02, 1.02))
-            self.axes.set_zlim((-0.02, 1.02))
-
-            # Set labels
-            self.axes.set_xlabel('H')
-            self.axes.set_ylabel('S')
-            
-            # 3rd axis
-            self.axes.tick_params(axis='z', colors='white')
-        
-        if self.diagram_type.text == 'HS':
-            # 2D scatter plot
-            self.axes = self.figure.add_subplot()
-
-            # Plot point by point, each with own color
-            for color in self.palette._colors:
-                srgb = color.get(SRGB)
-                hsb = color.get(HSB)
-                point = self.axes.scatter(hsb.H, hsb.S, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
-                self.points.append(point)
-
-            # Set range
-            self.axes.set_xlim((-0.02, 1.02))
-            self.axes.set_ylim((-0.02, 1.02))
-
-            # Set labels
-            self.axes.set_xlabel('H')
-            self.axes.set_ylabel('S')
-        
-        if self.diagram_type.text == 'SB':
-            # 2D scatter plot
-            self.axes = self.figure.add_subplot()
-
-            # Plot point by point, each with own color
-            for color in self.palette._colors:
-                srgb = color.get(SRGB)
-                hsb = color.get(HSB)
-                point = self.axes.scatter(hsb.S, hsb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
-                self.points.append(point)
-
-            # Set range
-            self.axes.set_xlim((-0.02, 1.02))
-            self.axes.set_ylim((-0.02, 1.02))
-
-            # Set labels
-            self.axes.set_xlabel('S')
-            self.axes.set_ylabel('B')
-
-        if self.diagram_type.text == 'HB':
-            # 2D scatter plot
-            self.axes = self.figure.add_subplot()
-
-            # Plot point by point, each with own color
-            for color in self.palette._colors:
-                srgb = color.get(SRGB)
-                hsb = color.get(HSB)
-                point = self.axes.scatter(hsb.H, hsb.B, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
-                self.points.append(point)
-
-            # Set range
-            self.axes.set_xlim((-0.02, 1.02))
-            self.axes.set_ylim((-0.02, 1.02))
-
-            # Set labels
-            self.axes.set_xlabel('H')
-            self.axes.set_ylabel('B')
 
         # Set color (white)
         self.axes.xaxis.label.set_color('white')
@@ -257,4 +152,4 @@ class ColorDiagram(BoxLayout):
 
         # Draw content
         self._canvas = FigureCanvasKivyAgg(self.figure)
-        self.diagram_area.add_widget(self._canvas)
+        self.ids.diagram_area.add_widget(self._canvas)

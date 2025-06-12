@@ -2,9 +2,6 @@
 # colordiagram.kv
 
 <ColorDiagram>:
-    diagram_type: diagram_type
-    diagram_area: diagram_area
-
     orientation: 'vertical'
     
     BoxLayout:
@@ -26,7 +23,7 @@
             size_hint_x: 1
             text: root.color_model.ID
             values: root.color_models
-            #on_text: root.create()
+            on_text: root.set_color_model(self.text)
     
     BoxLayout:
         orientation: 'horizontal'
@@ -47,7 +44,7 @@
             size_hint_x: 1
             text: 'None'
             values: root.diagram_types
-            #on_text: root.create()
+            on_text: root.create()
     
     BoxLayout:
         orientation: 'horizontal'
@@ -66,9 +63,9 @@
         Spinner:
             id: horizontal_axis
             size_hint_x: 1
-            text: 'None'
+            text: root.component_names[0]
             values: root.component_names
-            #on_text: root.create()
+            on_text: root.update()
     
     BoxLayout:
         orientation: 'horizontal'
@@ -87,10 +84,10 @@
         Spinner:
             id: vertical_axis
             size_hint_x: 1
-            text: 'None'
+            text: root.component_names[1]
             values: root.component_names
-            #on_text: root.create()
-
+            on_text: root.update()
+    
     BoxLayout:
         id: diagram_area
         orientation: 'horizontal'
