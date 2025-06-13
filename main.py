@@ -9,6 +9,7 @@ from kivy.properties import *
 from kivy.clock import Clock
 from kivy.core.window import Window
 
+# Custom widgets
 from components.colorbox.colorbox import ColorBox
 from components.colortable.colortable import ColorTable
 from components.colordiagram.colordiagram import ColorDiagram
@@ -29,7 +30,7 @@ class MainApp(App):
             self.palette.append(c)
 
         # Set window size
-        Window.size = (960, 600)
+        Window.size = (960, 620)
 
         # Draw UI
         self.root = Builder.load_file("main.kv")
@@ -43,6 +44,7 @@ class MainApp(App):
         self.root.ids.randomize.generate_palette = self.palette.generate_sRGB_random
         self.root.ids.cosine.generate_palette = self.palette.generate_sRGB_cosine
 
+        # Set the working palette for the UI elemenets
         self.root.ids.color_entry_table.palette = self.palette
         self.root.ids.diagram1.palette = self.palette
         self.root.ids.diagram2.palette = self.palette
@@ -55,8 +57,8 @@ class MainApp(App):
         self.root.ids.color_entry_table.update()
         
         # Update graphs
-        #self.root.ids.diagram1.update()
-        #self.root.ids.diagram2.update()
+        self.root.ids.diagram1.update()
+        self.root.ids.diagram2.update()
 
 if __name__ == "__main__":
     MainApp().run()

@@ -7,7 +7,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty, StringProperty, ListProperty
 
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 
 from kivy_garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
@@ -22,10 +21,11 @@ class ColorDiagram(BoxLayout):
     color_model = ObjectProperty(cm.SRGB)
     component_names = ListProperty(cm.SRGB.component_names)
 
+    _points = []
+
     def on_palette(self, instance, value):
         if isinstance(value, palette.Palette):
-            pass
-            #self.update()
+            self.update()
     
     def set_color_model(self, ID):
         self.color_model = next((cm for cm in cm.color_models if cm.ID == ID), None)
@@ -41,13 +41,14 @@ class ColorDiagram(BoxLayout):
     def update(self):
         diagram_type = self.ids.diagram_type.text
 
-        # Validate color model and component names
         if not isinstance(self.color_model, cm.ColorModel):
-            print("Invalid color model.")
-            return
+            return # Invalid color model
+        
+        if not hasattr(self, '_canvas'):
+            return  # Skip update if create() hasn't been called yet
 
         try:
-            for point, color in zip(self.points, self.palette._colors):
+            for point, color in zip(self._points, self.palette._colors):
                 srgb = color.get(SRGB)
                 point.set_color(srgb)
                 point.set_edgecolor('black')
@@ -81,13 +82,13 @@ class ColorDiagram(BoxLayout):
     def create(self):
         # Clear area
         self.ids.diagram_area.clear_widgets()
-        self.points = []
 
         if self.ids.diagram_type.text == 'None':
             return
         
         # Prepare chart
         self.figure = plt.figure()
+        self._points = []
 
         if self.ids.diagram_type.text == '3D Plot':
             # 3D scatter plot
@@ -100,7 +101,7 @@ class ColorDiagram(BoxLayout):
                 components = color.get(self.color_model)
 
                 point = self.axes.scatter(components[0], components[1], components[2], s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
-                self.points.append(point)
+                self._points.append(point)
 
             # Set range
             self.axes.set_xlim(self.color_model.ranges[0])
@@ -129,7 +130,7 @@ class ColorDiagram(BoxLayout):
                 x = components[x_index]
                 y = components[y_index]
                 point = self.axes.scatter(x, y, s=100.0, marker='o', color=srgb, edgecolor='black', linewidth=1)
-                self.points.append(point)
+                self._points.append(point)
 
             # Set range
             self.axes.set_xlim(self.color_model.ranges[x_index])

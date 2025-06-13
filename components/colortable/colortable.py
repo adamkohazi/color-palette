@@ -3,7 +3,7 @@ import palette
 import color_model
 
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import ObjectProperty, StringProperty, OptionProperty, ListProperty
+from kivy.properties import ObjectProperty, StringProperty, ListProperty
 from components.colorbox.colorbox import ColorBox
 
 class ColorTable(BoxLayout):
