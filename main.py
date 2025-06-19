@@ -8,6 +8,7 @@ from kivy.lang.builder import Builder
 from kivy.properties import *
 from kivy.clock import Clock
 from kivy.core.window import Window
+from kivy.config import Config
 
 # Custom widgets
 from components.colorbox.colorbox import ColorBox
@@ -29,8 +30,9 @@ class MainApp(App):
             c.set(CIERGB, rgb)
             self.palette.append(c)
 
-        # Set window size
+        # Set fixed window size
         Window.size = (960, 620)
+        Config.set('graphics', 'resizable', False)
 
         # Draw UI
         self.root = Builder.load_file("main.kv")

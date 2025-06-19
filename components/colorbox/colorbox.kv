@@ -2,7 +2,7 @@
 # colorbox.kv
 
 <ColorBox>:
-    remove: lambda *args: None # Function that does nothing, but we can set to another function, once class is used elsewhere
+    remove: lambda *args: None # Function that does nothing, but can be set to another function, once class is used elsewhere
     
     orientation: 'horizontal'
     size_hint_y: None
@@ -31,8 +31,16 @@
         text: root.rgb_hex
     
     # R, G, B values
+    Button:
+        size_hint_x: None
+        width: 20
+        text: '-'
     Label:
         text: root.color_model_1_component_1
+    Button:
+        size_hint_x: None
+        width: 20
+        text: '+'
     
     Label:
         text: root.color_model_1_component_2
@@ -41,8 +49,16 @@
         text: root.color_model_1_component_3
     
     # X, Y, Z values
+    Button:
+        size_hint_x: None
+        width: 20
+        text: '-'
     Label:
         text: root.color_model_2_component_1
+    Button:
+        size_hint_x: None
+        width: 20
+        text: '+'
     
     Label:
         text: root.color_model_2_component_2
