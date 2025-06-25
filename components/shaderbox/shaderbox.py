@@ -1,6 +1,7 @@
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.properties import StringProperty
-from kivy.graphics import RenderContext, Rectangle
+from kivy.graphics import RenderContext
 from kivy.core.window import Window
 from kivy.clock import Clock
 

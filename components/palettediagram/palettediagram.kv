@@ -1,0 +1,98 @@
+#:kivy 2.3.0
+# palettediagram.kv
+
+#:include components/shaderbox/shaderbox.kv
+
+<PaletteDiagram>:
+    orientation: 'vertical'
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 30  # Fixed row height
+        spacing: 10
+        
+        Label:
+            text: 'Color model:'
+            size_hint_x: None
+            width: 100  # Fixed width
+            text_size: self.size
+            halign: 'right'
+            valign: 'middle'
+        
+        Spinner:
+            id: color_model
+            size_hint_x: 1
+            text: root.color_model.ID
+            values: root.color_models
+            on_text: root.set_color_model(self.text)
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 30  # Fixed row height
+        spacing: 10
+        
+        Label:
+            text: 'Diagram:'
+            size_hint_x: None
+            width: 100  # Fixed width
+            text_size: self.size
+            halign: 'right'
+            valign: 'middle'
+        
+        Spinner:
+            id: diagram_type
+            size_hint_x: 1
+            text: 'None'
+            values: root.diagram_types
+            on_text: root.create()
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 30  # Fixed row height
+        spacing: 10
+        
+        Label:
+            text: 'X axis:'
+            size_hint_x: None
+            width: 100  # Fixed width
+            text_size: self.size
+            halign: 'right'
+            valign: 'middle'
+        
+        Spinner:
+            id: horizontal_axis
+            size_hint_x: 1
+            text: root.component_names[0]
+            values: root.component_names
+            on_text: root.update()
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 30  # Fixed row height
+        spacing: 10
+        
+        Label:
+            text: 'Y axis:'
+            size_hint_x: None
+            width: 100  # Fixed width
+            text_size: self.size
+            halign: 'right'
+            valign: 'middle'
+        
+        Spinner:
+            id: vertical_axis
+            size_hint_x: 1
+            text: root.component_names[1]
+            values: root.component_names
+            on_text: root.update()
+    
+    BoxLayout:
+        orientation: 'vertical'
+        id: viewer
+
+        Shaderbox:
+            id: shader

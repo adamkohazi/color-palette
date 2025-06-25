@@ -5,6 +5,7 @@
 #:include components/colorbox/colorbox.kv
 #:include components/colortable/colortable.kv
 #:include components/colordiagram/colordiagram.kv
+#:include components/palettediagram/palettediagram.kv
 
 StackLayout:
     orientation: 'tb-lr'
@@ -45,7 +46,7 @@ StackLayout:
                     id: diagram1
             Box2:
                 size_hint_y: 1 # Take up remaining space
-                ColorDiagram:
+                PaletteDiagram:
                     id: diagram2
     
     Box1:

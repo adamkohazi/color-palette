@@ -15,6 +15,7 @@ from components.colorbox.colorbox import ColorBox
 from components.colortable.colortable import ColorTable
 from components.colordiagram.colordiagram import ColorDiagram
 from components.paramcontrol.paramcontrol import ParamControl
+from components.palettediagram.palettediagram import PaletteDiagram
 
 
 class MainApp(App):
